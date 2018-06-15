@@ -15,6 +15,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.himebaugh.bakingapp.database.AppDatabase;
+import com.himebaugh.bakingapp.database.IngredientDao;
+import com.himebaugh.bakingapp.database.IngredientEntry;
+import com.himebaugh.bakingapp.database.RecipeDao;
+import com.himebaugh.bakingapp.database.RecipeEntry;
+import com.himebaugh.bakingapp.database.StepDao;
+import com.himebaugh.bakingapp.database.StepEntry;
 import com.himebaugh.bakingapp.model.Ingredients;
 import com.himebaugh.bakingapp.model.Recipe;
 import com.himebaugh.bakingapp.model.Steps;
@@ -58,13 +65,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
         // Load JSON from Internet...
         URL queryUrl = NetworkUtil.buildUrl(this, "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json");
         new RecipeQueryTask().execute(queryUrl);
 
-    }
+//        To add things to the database we need to invoke:
+//
+//        RepoDatabase
+//                .getInstance(context)
+//                .getRepoDao()
+//                .insert(new Repo(1, "Cool Repo Name", "url"));
+//        Getting things is also pretty simple:
+//
+//        List<Repo> allRepos = RepoDatabase
+//                .getInstance(MainActivity.this)
+//                .getRepoDao()
+//                .getAllRepos();
 
+    }
 
 
     public class RecipeQueryTask extends AsyncTask<URL, Void, ArrayList<Recipe>> {
@@ -93,21 +111,44 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         protected void onPostExecute(ArrayList<Recipe> recipeList) {
 
+            RecipeDao recipeDao = AppDatabase.getInstance(getApplicationContext()).recipeDao();
+            StepDao stepDao = AppDatabase.getInstance(getApplicationContext()).stepDao();
+            IngredientDao ingredientDao = AppDatabase.getInstance(getApplicationContext()).ingredientDao();
+
+
             Log.i(TAG, "recipeList.toString(): " + recipeList.toString());
 
             Log.i(TAG, "recipeList.size()" + recipeList.size());
 
             for (Recipe recipe : recipeList) {
 
+                recipeDao.insertRecipe(new RecipeEntry(recipe.getName(), recipe.getServings(), recipe.getImage()));
+
                 Log.i(TAG, "listIterator: " + recipe.getName() + " " + recipe.getImage());
 
                 // ArrayList<Ingredients> ingredients, ArrayList<Steps> steps
 
-                for (Ingredients ingredients :  recipe.getIngredients()) {
+                for (Ingredients ingredients : recipe.getIngredients()) {
+
+                    ingredientDao.insertIngredient(new IngredientEntry(
+                            ingredients.getQuantity(),
+                            ingredients.getMeasure(),
+                            ingredients.getIngredient(),
+                            recipe.getId()));
+
                     Log.i(TAG, "listIterator: " + ingredients.getIngredient() + " " + ingredients.getMeasure());
                 }
 
                 for (Steps steps : recipe.getSteps()) {
+
+                    stepDao.insertStep(new StepEntry(
+                            steps.getId(),
+                            steps.getShortDescription(),
+                            steps.getDescription(),
+                            steps.getVideoURL(),
+                            steps.getThumbnailURL(),
+                            recipe.getId()));
+
                     Log.i(TAG, "listIterator: " + steps.getDescription() + " " + steps.getVideoURL());
                 }
 
@@ -117,7 +158,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     }
-
 
 
     @Override

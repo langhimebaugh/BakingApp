@@ -17,33 +17,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Scanner;
-
-//import android.content.ContentValues;
-//import android.content.Context;
-//import android.database.Cursor;
-//import android.net.Uri;
-//import android.util.Log;
-//
-//import com.google.gson.Gson;
-//import com.google.gson.reflect.TypeToken;
-//
-//import java.io.BufferedReader;
-//import java.io.IOException;
-//import java.io.InputStream;
-//import java.io.InputStreamReader;
-//import java.lang.reflect.Type;
-//import java.net.HttpURLConnection;
-//import java.net.MalformedURLException;
-//import java.net.URL;
-//import java.util.ArrayList;
-//import java.util.Map;
-//import java.util.Scanner;
-
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class NetworkUtil {
 
@@ -63,30 +37,6 @@ public class NetworkUtil {
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
 
         return activeNetwork != null && (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI);
-    }
-
-    // UD851  video #26
-    public static String getResponseFromHttpUrl(URL url) throws IOException {
-
-        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-
-        try {
-            InputStream inputStream = urlConnection.getInputStream();
-
-            Scanner scanner = new Scanner(inputStream);
-            scanner.useDelimiter("\\A");
-
-            boolean hasInput = scanner.hasNext();
-
-            if (hasInput) {
-                return scanner.next();
-            } else {
-                return null;
-            }
-        } finally {
-
-            urlConnection.disconnect();
-        }
     }
 
     /**
@@ -109,7 +59,6 @@ public class NetworkUtil {
 
         return url;
     }
-
 
     /**
      * This method returns the entire result from the HTTP response.
@@ -143,35 +92,6 @@ public class NetworkUtil {
         return jsonString;
     }
 
-    /**
-     * Alternatively this method returns the entire result using OkHttpClient.
-     *
-     * @param url The URL to fetch the HTTP response from.
-     * @return The contents of the HTTP response.
-     */
-    public static String getJsonFromOkHttpClient(URL url) {
-
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url(url)
-                .get()
-                .build();
-
-        String jsonString = null;
-
-        try {
-            Response response = client.newCall(request).execute();
-            if (response.isSuccessful()) {
-                jsonString = response.body().string();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return jsonString;
-    }
-
-
     public static ArrayList<Recipe> getRecipeList(Context context, URL queryUrl) throws IOException {
 
         ArrayList<Recipe> returnRecipeList;
@@ -200,8 +120,6 @@ public class NetworkUtil {
         //
         // **********************************************
 
-
-
         // Can use either one... getJsonFromHttpUrl() -OR- getJsonFromOkHttpClient()
         String recipeJsonResults = getJsonFromHttpUrl(queryUrl);
         // String popularRecipesJsonResults = getJsonFromOkHttpClient(queryUrl);  // This Works Fine
@@ -220,22 +138,6 @@ public class NetworkUtil {
             Type listType = new TypeToken<ArrayList<Recipe>>() {
             }.getType();
             returnRecipeList = gson.fromJson(recipeJsonResults, listType);
-
-
-
-
-//            Gson gson = new Gson();
-//            Map<String, Object> map = gson.fromJson(recipeJsonResults, new TypeToken<Map<String, Object>>() {
-//            }.getType());
-//
-//            // String recipeListJsonResults = gson.toJson(map.get("results"));
-//            String recipeListJsonResults = gson.toJson(map.get(""));
-//
-//            Type listType = new TypeToken<ArrayList<Recipe>>() {
-//            }.getType();
-//
-//            // Now Gson converts the json to a list of recipes object based on the Recipe class
-//            returnRecipeList = gson.fromJson(recipeListJsonResults, listType);
 
             // ***********************************************************
             // The latest RecipeList results are saved to the database
