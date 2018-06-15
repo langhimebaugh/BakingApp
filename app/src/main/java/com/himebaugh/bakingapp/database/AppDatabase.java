@@ -20,13 +20,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
-@Database(entities = {RecipeEntry.class}, version = 1, exportSchema = false)
+@Database(entities = {RecipeEntry.class, IngredientEntry.class, StepEntry.class}, version = 1, exportSchema = false)
 //@TypeConverters(DateConverter.class)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static final String LOG_TAG = AppDatabase.class.getSimpleName();
     private static final Object LOCK = new Object();
-    private static final String DATABASE_NAME = "baked1";    // .db ??
+    private static final String DATABASE_NAME = "baked6";    // .db ??
     private static AppDatabase sInstance;                   // volatile ??
 
     public static AppDatabase getInstance(final Context context) {
@@ -35,6 +35,8 @@ public abstract class AppDatabase extends RoomDatabase {
                 Log.d(LOG_TAG, "Creating new database instance");
                 sInstance = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, AppDatabase.DATABASE_NAME)
 
+                        // TODO: Temporary
+                        .allowMainThreadQueries()
                         // To Populate database
                         .addCallback(new Callback() {
                             @Override
@@ -52,8 +54,21 @@ public abstract class AppDatabase extends RoomDatabase {
                                 // new InitAsyncTask(sInstance).execute();
                                 // Log.d(LOG_TAG, "db init");
 
-                                new InitDatabaseTask(sInstance).execute();
-                                Log.d(LOG_TAG, "db init");
+                                URL url = NetworkUtil.buildUrl(context.getApplicationContext(), "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json");
+
+                                // ================================
+                                // ALL 3 Options below will work!
+                                // ================================
+
+                                // #1
+                                DatabaseInitializer.populateAsync(url, sInstance);
+
+                                // #2
+                                //DatabaseInitializer.populateSync(url, sInstance);
+
+                                // #3
+                                // new InitDatabaseTask(sInstance).execute(context.getApplicationContext());
+                                // Log.d(LOG_TAG, "db init");
                             }
                         })
 
@@ -68,104 +83,75 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract IngredientDao ingredientDao();
     public abstract StepDao stepDao();
 
+
 //
-//    private static class InitAsyncTask extends AsyncTask<Recipe, Void, Void> {
+//    private static class InitDatabaseTask extends AsyncTask<Context, Void, ArrayList<Recipe>> {
 //
 //        private final RecipeDao recipeDao;
+//        private final StepDao stepDao;
+//        private final IngredientDao ingredientDao;
 //
-//        private InitAsyncTask(AppDatabase appDatabase) {
-//            this.recipeDao = appDatabase.recipeDao();
+//        private InitDatabaseTask(AppDatabase appDatabase) {
+//            recipeDao = appDatabase.recipeDao();
+//            stepDao = appDatabase.stepDao();
+//            ingredientDao = appDatabase.ingredientDao();
 //        }
+//
 //
 //        @Override
-//        protected Void doInBackground(Recipe... recipes) {
-//            recipeDao.deleteAll();
-//            recipeDao.insert(new Recipe("apple"));
-//            recipeDao.insert(new Recipe("orange"));
-//            recipeDao.insert(new Repo(1, "Cool Repo Name", "url"));
-//            return null;
-//        }
-//    }
-
+//        protected ArrayList<Recipe> doInBackground(Context... contexts) {
 //
-    private static class InitDatabaseTask extends AsyncTask<Context, Context, ArrayList<Recipe>> {
-
-        private final RecipeDao recipeDao;
-        private final StepDao stepDao;
-        private final IngredientDao ingredientDao;
-
-        private InitDatabaseTask(AppDatabase appDatabase) {
-            recipeDao = appDatabase.recipeDao();
-            stepDao = appDatabase.stepDao();
-            ingredientDao = appDatabase.ingredientDao();
-        }
-
-
-        @Override
-        protected ArrayList<Recipe> doInBackground(Context... contexts) {
-
-            URL url = NetworkUtil.buildUrl(contexts[0], "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json");
-
-            ArrayList<Recipe> recipeList = null;
-
-            try {
-                recipeList = NetworkUtil.getRecipeList(contexts[0], url);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return recipeList;
-        }
-
-    @Override
-        protected void onPostExecute(ArrayList<Recipe> recipeList) {
-
-//            RecipeDao recipeDao = this.recipeDao;
-//            StepDao stepDao = AppDatabase.getInstance(getApplicationContext()).stepDao();
-//            IngredientDao ingredientDao = AppDatabase.getInstance(getApplicationContext()).ingredientDao();
-
-
-            Log.i(LOG_TAG, "recipeList.toString(): " + recipeList.toString());
-
-            Log.i(LOG_TAG, "recipeList.size()" + recipeList.size());
-
-            for (Recipe recipe : recipeList) {
-
-                recipeDao.insertRecipe(new RecipeEntry(recipe.getName(), recipe.getServings(), recipe.getImage()));
-
-                Log.i(LOG_TAG, "listIterator: " + recipe.getName() + " " + recipe.getImage());
-
-                // ArrayList<Ingredients> ingredients, ArrayList<Steps> steps
-
-                for (Ingredients ingredients : recipe.getIngredients()) {
-
-                    ingredientDao.insertIngredient(new IngredientEntry(
-                            ingredients.getQuantity(),
-                            ingredients.getMeasure(),
-                            ingredients.getIngredient(),
-                            recipe.getId()));
-
-                    Log.i(LOG_TAG, "listIterator: " + ingredients.getIngredient() + " " + ingredients.getMeasure());
-                }
-
-                for (Steps steps : recipe.getSteps()) {
-
-                    stepDao.insertStep(new StepEntry(
-                            steps.getId(),
-                            steps.getShortDescription(),
-                            steps.getDescription(),
-                            steps.getVideoURL(),
-                            steps.getThumbnailURL(),
-                            recipe.getId()));
-
-                    Log.i(LOG_TAG, "listIterator: " + steps.getDescription() + " " + steps.getVideoURL());
-                }
-
-            }
-
-        }
-
-
-    }
+//            URL url = NetworkUtil.buildUrl(contexts[0], "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json");
+//
+//            ArrayList<Recipe> recipeList = null;
+//
+//            try {
+//                recipeList = NetworkUtil.getRecipeList(url);
+//
+//                for (Recipe recipe : recipeList) {
+//
+//                    recipeDao.insertRecipe(new RecipeEntry(recipe.getName(), recipe.getServings(), recipe.getImage()));
+//
+//                    for (Ingredients ingredients : recipe.getIngredients()) {
+//
+//                        ingredientDao.insertIngredient(new IngredientEntry(
+//                                ingredients.getQuantity(),
+//                                ingredients.getMeasure(),
+//                                ingredients.getIngredient(),
+//                                recipe.getId()));
+//
+//                    }
+//
+//                    for (Steps steps : recipe.getSteps()) {
+//
+//                        stepDao.insertStep(new StepEntry(
+//                                steps.getId(),
+//                                steps.getShortDescription(),
+//                                steps.getDescription(),
+//                                steps.getVideoURL(),
+//                                steps.getThumbnailURL(),
+//                                recipe.getId()));
+//
+//                    }
+//
+//                }
+//
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            return recipeList;
+//        }
+//
+//    @Override
+//        protected void onPostExecute(ArrayList<Recipe> recipeList) {
+//
+//            //
+//
+//        }
+//
+//
+//    }
 
 }

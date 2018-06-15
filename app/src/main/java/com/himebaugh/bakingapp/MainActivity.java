@@ -96,13 +96,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void setupViewModel() {
         MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        viewModel.getTasks().observe(this, new Observer<List<RecipeEntry>>() {
+        viewModel.getRecipes().observe(this, new Observer<List<RecipeEntry>>() {
             @Override
             public void onChanged(@Nullable List<RecipeEntry> recipeEntries) {
-                Log.d(TAG, "Updating list of tasks from LiveData in ViewModel");
+                Log.d(TAG, "Updating list of recipes from LiveData in ViewModel");
 
+                Log.i(TAG, "recipeEntries.size(): " + recipeEntries.size());
                 // TODO: Create Adapter
                 // mAdapter.setTasks(recipeEntries);
+            }
+        });
+        viewModel.getIngredients(2).observe(this, new Observer<List<IngredientEntry>>() {
+            @Override
+            public void onChanged(@Nullable List<IngredientEntry> ingredientEntries) {
+                Log.d(TAG, "Updating list of ingredients from LiveData in ViewModel");
+
+                Log.i(TAG, "ingredientEntries.size(): " + ingredientEntries.size());
+            }
+        });
+        viewModel.getSteps(1).observe(this, new Observer<List<StepEntry>>() {
+            @Override
+            public void onChanged(@Nullable List<StepEntry> stepEntries) {
+                Log.d(TAG, "Updating list of steps from LiveData in ViewModel");
+
+                Log.i(TAG, "stepEntries.size(): " + stepEntries.size());
             }
         });
     }

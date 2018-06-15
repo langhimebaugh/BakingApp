@@ -13,6 +13,9 @@ import java.util.List;
 @Dao
 public interface IngredientDao {
 
+//    @Query("SELECT * from ingredients WHERE recipe_id = :recipeId ORDER BY _id")
+//    LiveData<List<Ingredient>> get(int recipeId);
+
     @Query("SELECT * FROM ingredients WHERE recipeId = :recipeId ORDER BY id")
     LiveData<List<IngredientEntry>> loadIngredientsByRecipeId(int recipeId);
 
@@ -27,6 +30,13 @@ public interface IngredientDao {
 
     @Query("SELECT * FROM ingredients WHERE id = :id")
     LiveData<IngredientEntry> loadIngredientById(int id);
+
+//    @Query("SELECT * FROM Book " +
+//            "INNER JOIN Loan ON Loan.book_id = Book.id " +
+//            "INNER JOIN User on User.id = Loan.user_id " +
+//            "WHERE User.name LIKE :userName"
+//    )
+//    LiveData<List<Book>> findBooksBorrowedByName(String userName);
 
     // ========================
     // https://android.jlelse.eu/android-architecture-components-room-introduction-4774dd72a1ae

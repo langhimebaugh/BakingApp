@@ -16,8 +16,9 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 public class StepEntry {
 
-    @PrimaryKey(autoGenerate = false)
+    @PrimaryKey(autoGenerate = true)
     private int id;
+    private int stepNumber;
     private String shortDescription;
     private String description;
     private String videoURL;
@@ -25,15 +26,18 @@ public class StepEntry {
     private int recipeId;
 
     @Ignore
-    public StepEntry(String shortDescription, String description, String videoURL, String thumbnailURL) {
+    public StepEntry(int stepNumber, String shortDescription, String description, String videoURL, String thumbnailURL, int recipeId) {
+        this.stepNumber = stepNumber;
         this.shortDescription = shortDescription;
         this.description = description;
         this.videoURL = videoURL;
         this.thumbnailURL = thumbnailURL;
+        this.recipeId = recipeId;
     }
 
-    public StepEntry(int id, String shortDescription, String description, String videoURL, String thumbnailURL, int recipeId) {
+    public StepEntry(int id, int stepNumber, String shortDescription, String description, String videoURL, String thumbnailURL, int recipeId) {
         this.id = id;
+        this.stepNumber = stepNumber;
         this.shortDescription = shortDescription;
         this.description = description;
         this.videoURL = videoURL;
@@ -47,6 +51,14 @@ public class StepEntry {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getStepNumber() {
+        return stepNumber;
+    }
+
+    public void setStepNumber(int stepNumber) {
+        this.stepNumber = stepNumber;
     }
 
     public String getShortDescription() {

@@ -7,7 +7,10 @@ import android.util.Log;
 
 
 import com.himebaugh.bakingapp.database.AppDatabase;
+import com.himebaugh.bakingapp.database.IngredientDao;
+import com.himebaugh.bakingapp.database.IngredientEntry;
 import com.himebaugh.bakingapp.database.RecipeEntry;
+import com.himebaugh.bakingapp.database.StepEntry;
 
 import java.util.List;
 
@@ -16,16 +19,33 @@ public class MainViewModel extends AndroidViewModel {
     // Constant for logging
     private static final String TAG = MainViewModel.class.getSimpleName();
 
+    private AppDatabase mDatabase;
     private LiveData<List<RecipeEntry>> recipes;
+    private LiveData<List<IngredientEntry>> ingredients;
 
     public MainViewModel(Application application) {
         super(application);
-        AppDatabase database = AppDatabase.getInstance(this.getApplication());
+        mDatabase = AppDatabase.getInstance(this.getApplication());
         Log.d(TAG, "Actively retrieving the recipes from the DataBase");
-        recipes = database.recipeDao().loadAllRecipes();
+
+
+        // recipes = mDatabase.recipeDao().loadAllRecipes();
+        // Log.i(TAG, "MainViewModel: recipes.getValue().size()=" + recipes.getValue().size());
+        // Log.i(TAG, "MainViewModel: getRecipes().getValue().size()=" + getRecipes().getValue().size());
     }
 
-    public LiveData<List<RecipeEntry>> getTasks() {
-        return recipes;
+    public LiveData<List<RecipeEntry>> getRecipes() {
+
+        return mDatabase.recipeDao().loadAllRecipes();
     }
+
+    public LiveData<List<IngredientEntry>> getIngredients(int recipeId) {
+
+        return mDatabase.ingredientDao().loadIngredientsByRecipeId(recipeId);
+    }
+
+    public LiveData<List<StepEntry>> getSteps(int recipeId) {
+        return mDatabase.stepDao().loadStepsByRecipeId(recipeId);
+    }
+
 }

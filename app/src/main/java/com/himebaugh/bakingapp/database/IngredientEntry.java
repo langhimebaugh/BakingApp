@@ -13,6 +13,8 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
 // For onDelete() action, this means that each row in the child entity that was associated with the deleted parent row is also deleted.
 // For an onUpdate() action, it means that the values stored in each dependent child key are modified to match the new parent key values.
 
+// TODO: recipeId column references a foreign key but it is not part of an index. This may trigger full table scans whenever parent table is modified so you are highly advised to create an index that covers this column.
+
 @Entity(tableName = "ingredients",
         foreignKeys = @ForeignKey(entity = RecipeEntry.class,
                 parentColumns = "id",

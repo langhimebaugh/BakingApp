@@ -105,7 +105,7 @@ public class NetworkUtil {
         return jsonString;
     }
 
-    public static ArrayList<Recipe> getRecipeList(Context context, URL queryUrl) throws IOException {
+    public static ArrayList<Recipe> getRecipeList(URL url) throws IOException {
 
         ArrayList<Recipe> returnRecipeList;
 
@@ -134,7 +134,7 @@ public class NetworkUtil {
         // **********************************************
 
         // Can use either one... getJsonFromHttpUrl() -OR- getJsonFromOkHttpClient()
-        String recipeJsonResults = getJsonFromHttpUrl(queryUrl);
+        String recipeJsonResults = getJsonFromHttpUrl(url);
         // String popularRecipesJsonResults = getJsonFromOkHttpClient(queryUrl);  // This Works Fine
 
         if (recipeJsonResults == null) {
@@ -180,7 +180,7 @@ public class NetworkUtil {
             ArrayList<Recipe> recipeList = null;
 
             try {
-                recipeList = NetworkUtil.getRecipeList(context, url);
+                recipeList = NetworkUtil.getRecipeList(url);
             } catch (IOException e) {
                 e.printStackTrace();
             }
