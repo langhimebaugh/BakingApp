@@ -13,7 +13,7 @@ import java.util.List;
 @Dao
 public interface RecipeDao {
 
-    @Query("SELECT * FROM recipe ORDER BY priority")
+    @Query("SELECT * FROM recipe ORDER BY id")
     LiveData<List<RecipeEntry>> loadAllRecipes();
 
     @Insert

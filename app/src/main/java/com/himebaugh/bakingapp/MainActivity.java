@@ -1,7 +1,10 @@
 package com.himebaugh.bakingapp;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
@@ -39,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private final static String TAG = MainActivity.class.getName();
 
+    private AppDatabase mDb;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +71,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         // Load JSON from Internet...
-        URL queryUrl = NetworkUtil.buildUrl(this, "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json");
-        new RecipeQueryTask().execute(queryUrl);
+        // URL queryUrl = NetworkUtil.buildUrl(this, "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json");
+        
+        // new NetworkUtil.InitializeDatabaseTask().execute(queryUrl);
+
+        mDb = AppDatabase.getInstance(getApplicationContext());
+
+        setupViewModel();
 
 //        To add things to the database we need to invoke:
 //
@@ -84,80 +94,92 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    private void setupViewModel() {
+        MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        viewModel.getTasks().observe(this, new Observer<List<RecipeEntry>>() {
+            @Override
+            public void onChanged(@Nullable List<RecipeEntry> recipeEntries) {
+                Log.d(TAG, "Updating list of tasks from LiveData in ViewModel");
 
-    public class RecipeQueryTask extends AsyncTask<URL, Void, ArrayList<Recipe>> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            // mLoadingIndicatorProgressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected ArrayList<Recipe> doInBackground(URL... params) {
-            URL url = params[0];
-
-            ArrayList<Recipe> recipeList = null;
-
-            try {
-                recipeList = NetworkUtil.getRecipeList(getApplicationContext(), url);
-            } catch (IOException e) {
-                e.printStackTrace();
+                // TODO: Create Adapter
+                // mAdapter.setTasks(recipeEntries);
             }
-
-            return recipeList;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<Recipe> recipeList) {
-
-            RecipeDao recipeDao = AppDatabase.getInstance(getApplicationContext()).recipeDao();
-            StepDao stepDao = AppDatabase.getInstance(getApplicationContext()).stepDao();
-            IngredientDao ingredientDao = AppDatabase.getInstance(getApplicationContext()).ingredientDao();
-
-
-            Log.i(TAG, "recipeList.toString(): " + recipeList.toString());
-
-            Log.i(TAG, "recipeList.size()" + recipeList.size());
-
-            for (Recipe recipe : recipeList) {
-
-                recipeDao.insertRecipe(new RecipeEntry(recipe.getName(), recipe.getServings(), recipe.getImage()));
-
-                Log.i(TAG, "listIterator: " + recipe.getName() + " " + recipe.getImage());
-
-                // ArrayList<Ingredients> ingredients, ArrayList<Steps> steps
-
-                for (Ingredients ingredients : recipe.getIngredients()) {
-
-                    ingredientDao.insertIngredient(new IngredientEntry(
-                            ingredients.getQuantity(),
-                            ingredients.getMeasure(),
-                            ingredients.getIngredient(),
-                            recipe.getId()));
-
-                    Log.i(TAG, "listIterator: " + ingredients.getIngredient() + " " + ingredients.getMeasure());
-                }
-
-                for (Steps steps : recipe.getSteps()) {
-
-                    stepDao.insertStep(new StepEntry(
-                            steps.getId(),
-                            steps.getShortDescription(),
-                            steps.getDescription(),
-                            steps.getVideoURL(),
-                            steps.getThumbnailURL(),
-                            recipe.getId()));
-
-                    Log.i(TAG, "listIterator: " + steps.getDescription() + " " + steps.getVideoURL());
-                }
-
-            }
-
-        }
-
-
+        });
     }
+
+//    public class RecipeQueryTask extends AsyncTask<URL, Void, ArrayList<Recipe>> {
+//
+//        @Override
+//        protected void onPreExecute() {
+//            super.onPreExecute();
+//            // mLoadingIndicatorProgressBar.setVisibility(View.VISIBLE);
+//        }
+//
+//        @Override
+//        protected ArrayList<Recipe> doInBackground(URL... params) {
+//            URL url = params[0];
+//
+//            ArrayList<Recipe> recipeList = null;
+//
+//            try {
+//                recipeList = NetworkUtil.getRecipeList(getApplicationContext(), url);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            return recipeList;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(ArrayList<Recipe> recipeList) {
+//
+//            RecipeDao recipeDao = AppDatabase.getInstance(getApplicationContext()).recipeDao();
+//            StepDao stepDao = AppDatabase.getInstance(getApplicationContext()).stepDao();
+//            IngredientDao ingredientDao = AppDatabase.getInstance(getApplicationContext()).ingredientDao();
+//
+//
+//            Log.i(TAG, "recipeList.toString(): " + recipeList.toString());
+//
+//            Log.i(TAG, "recipeList.size()" + recipeList.size());
+//
+//            for (Recipe recipe : recipeList) {
+//
+//                recipeDao.insertRecipe(new RecipeEntry(recipe.getName(), recipe.getServings(), recipe.getImage()));
+//
+//                Log.i(TAG, "listIterator: " + recipe.getName() + " " + recipe.getImage());
+//
+//                // ArrayList<Ingredients> ingredients, ArrayList<Steps> steps
+//
+//                for (Ingredients ingredients : recipe.getIngredients()) {
+//
+//                    ingredientDao.insertIngredient(new IngredientEntry(
+//                            ingredients.getQuantity(),
+//                            ingredients.getMeasure(),
+//                            ingredients.getIngredient(),
+//                            recipe.getId()));
+//
+//                    Log.i(TAG, "listIterator: " + ingredients.getIngredient() + " " + ingredients.getMeasure());
+//                }
+//
+//                for (Steps steps : recipe.getSteps()) {
+//
+//                    stepDao.insertStep(new StepEntry(
+//                            steps.getId(),
+//                            steps.getShortDescription(),
+//                            steps.getDescription(),
+//                            steps.getVideoURL(),
+//                            steps.getThumbnailURL(),
+//                            recipe.getId()));
+//
+//                    Log.i(TAG, "listIterator: " + steps.getDescription() + " " + steps.getVideoURL());
+//                }
+//
+//            }
+//
+//        }
+//
+//
+//    }
 
 
     @Override

@@ -5,10 +5,21 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.himebaugh.bakingapp.database.AppDatabase;
+import com.himebaugh.bakingapp.database.IngredientDao;
+import com.himebaugh.bakingapp.database.IngredientEntry;
+import com.himebaugh.bakingapp.database.RecipeDao;
+import com.himebaugh.bakingapp.database.RecipeEntry;
+import com.himebaugh.bakingapp.database.StepDao;
+import com.himebaugh.bakingapp.database.StepEntry;
+import com.himebaugh.bakingapp.model.Ingredients;
 import com.himebaugh.bakingapp.model.Recipe;
+import com.himebaugh.bakingapp.model.Steps;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +31,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class NetworkUtil {
+
+    private static final String LOG_TAG = NetworkUtil.class.getSimpleName();
 
     public static boolean isNetworkAvailable(Context context) {
 
@@ -147,6 +160,82 @@ public class NetworkUtil {
         }
 
         return returnRecipeList;
+
+    }
+
+    public static class InitializeDatabaseTask extends AsyncTask<URL, Void, ArrayList<Recipe>> {
+
+        private final RecipeDao recipeDao;
+        private Context context;
+
+        public InitializeDatabaseTask(Context context, AppDatabase appDatabase) {
+            this.context = context;
+            this.recipeDao = appDatabase.recipeDao();
+        }
+
+        @Override
+        protected ArrayList<Recipe> doInBackground(URL... params) {
+            URL url = params[0];
+
+            ArrayList<Recipe> recipeList = null;
+
+            try {
+                recipeList = NetworkUtil.getRecipeList(context, url);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return recipeList;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Recipe> recipeList) {
+
+            RecipeDao recipeDao = AppDatabase.getInstance(context).recipeDao();
+            StepDao stepDao = AppDatabase.getInstance(context).stepDao();
+            IngredientDao ingredientDao = AppDatabase.getInstance(context).ingredientDao();
+
+
+            Log.i(LOG_TAG, "recipeList.toString(): " + recipeList.toString());
+
+            Log.i(LOG_TAG, "recipeList.size()" + recipeList.size());
+
+            for (Recipe recipe : recipeList) {
+
+                recipeDao.insertRecipe(new RecipeEntry(recipe.getName(), recipe.getServings(), recipe.getImage()));
+
+                Log.i(LOG_TAG, "listIterator: " + recipe.getName() + " " + recipe.getImage());
+
+                // ArrayList<Ingredients> ingredients, ArrayList<Steps> steps
+
+                for (Ingredients ingredients : recipe.getIngredients()) {
+
+                    ingredientDao.insertIngredient(new IngredientEntry(
+                            ingredients.getQuantity(),
+                            ingredients.getMeasure(),
+                            ingredients.getIngredient(),
+                            recipe.getId()));
+
+                    Log.i(LOG_TAG, "listIterator: " + ingredients.getIngredient() + " " + ingredients.getMeasure());
+                }
+
+                for (Steps steps : recipe.getSteps()) {
+
+                    stepDao.insertStep(new StepEntry(
+                            steps.getId(),
+                            steps.getShortDescription(),
+                            steps.getDescription(),
+                            steps.getVideoURL(),
+                            steps.getThumbnailURL(),
+                            recipe.getId()));
+
+                    Log.i(LOG_TAG, "listIterator: " + steps.getDescription() + " " + steps.getVideoURL());
+                }
+
+            }
+
+        }
+
 
     }
 
