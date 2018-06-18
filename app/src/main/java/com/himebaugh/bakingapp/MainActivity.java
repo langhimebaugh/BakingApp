@@ -95,7 +95,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void setupViewModel() {
+
         MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+
         viewModel.getRecipes().observe(this, new Observer<List<RecipeEntry>>() {
             @Override
             public void onChanged(@Nullable List<RecipeEntry> recipeEntries) {

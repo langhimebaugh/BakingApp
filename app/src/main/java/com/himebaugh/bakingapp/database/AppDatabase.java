@@ -26,7 +26,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     private static final String LOG_TAG = AppDatabase.class.getSimpleName();
     private static final Object LOCK = new Object();
-    private static final String DATABASE_NAME = "baked6";    // .db ??
+    private static final String DATABASE_NAME = "baked8";    // .db ??
     private static AppDatabase sInstance;                   // volatile ??
 
     public static AppDatabase getInstance(final Context context) {
@@ -53,6 +53,12 @@ public abstract class AppDatabase extends RoomDatabase {
                                 // https://github.com/lct8712/RoomWordSample/tree/756ec8dd8549b327256ad36283ccb5378485c23b
                                 // new InitAsyncTask(sInstance).execute();
                                 // Log.d(LOG_TAG, "db init");
+
+
+                                // http://go.udacity.com/android-baking-app-json
+                                // https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json
+                                // https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json
+
 
                                 URL url = NetworkUtil.buildUrl(context.getApplicationContext(), "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json");
 
