@@ -170,7 +170,7 @@ public class NetworkUtil {
 
         public InitializeDatabaseTask(Context context, AppDatabase appDatabase) {
             this.context = context;
-            this.recipeDao = appDatabase.recipeDao();
+            this.recipeDao = appDatabase.getRecipeDao();
         }
 
         @Override
@@ -191,9 +191,9 @@ public class NetworkUtil {
         @Override
         protected void onPostExecute(ArrayList<Recipe> recipeList) {
 
-            RecipeDao recipeDao = AppDatabase.getInstance(context).recipeDao();
-            StepDao stepDao = AppDatabase.getInstance(context).stepDao();
-            IngredientDao ingredientDao = AppDatabase.getInstance(context).ingredientDao();
+            RecipeDao recipeDao = AppDatabase.getInstance(context).getRecipeDao();
+            StepDao stepDao = AppDatabase.getInstance(context).getStepDao();
+            IngredientDao ingredientDao = AppDatabase.getInstance(context).getIngredientDao();
 
 
             Log.i(LOG_TAG, "recipeList.toString(): " + recipeList.toString());

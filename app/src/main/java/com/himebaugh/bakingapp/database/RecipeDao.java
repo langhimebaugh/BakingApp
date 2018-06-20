@@ -26,9 +26,14 @@ public interface RecipeDao {
     @Delete
     void deleteRecipe(RecipeEntry recipeEntry);
 
-    @Query("SELECT * FROM recipe WHERE id = :id")
+    @Query("SELECT * FROM " + AppDatabaseContract.RecipeEntry.TABLE_NAME + " WHERE id = :id")
     LiveData<RecipeEntry> loadRecipeById(int id);
 
+    @Query("SELECT * FROM " + AppDatabaseContract.RecipeEntry.TABLE_NAME + " ORDER BY " + AppDatabaseContract.RecipeEntry.COLUMN_NAME)
+    Cursor selectAll();
+
+    @Query("SELECT * FROM " + AppDatabaseContract.RecipeEntry.TABLE_NAME + " WHERE "  + AppDatabaseContract.RecipeEntry.COLUMN_ID + " = :id")
+    Cursor selectById(long id);
 
     @Query("SELECT recipe.*, ingredients.*, steps.* FROM recipe INNER JOIN ingredients ON ingredients.id = recipe.id INNER JOIN steps ON steps.recipeId = recipe.id")
     Cursor selectAllWithChildElements();

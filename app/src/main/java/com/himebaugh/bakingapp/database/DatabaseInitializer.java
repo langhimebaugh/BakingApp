@@ -49,9 +49,9 @@ public class DatabaseInitializer {
 
     private static void populateWithTestData(URL url, AppDatabase appDatabase) {
 
-        RecipeDao recipeDao = appDatabase.recipeDao();
-        StepDao stepDao = appDatabase.stepDao();
-        IngredientDao ingredientDao = appDatabase.ingredientDao();
+        RecipeDao recipeDao = appDatabase.getRecipeDao();
+        StepDao stepDao = appDatabase.getStepDao();
+        IngredientDao ingredientDao = appDatabase.getIngredientDao();
 
         //URL url = NetworkUtil.buildUrl(context, "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json");
 

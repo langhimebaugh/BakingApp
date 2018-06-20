@@ -23,6 +23,59 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <!-- App Widget 1 w/ Service -->
+        <receiver android:name=".RecipeWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/recipe_widget_info"/>
+        </receiver>
+
+        <service android:name=".RecipeIntentService" android:exported="false" />
+
+        <!--
+        &lt;!&ndash; App Widget 2 w/ Service &ndash;&gt;
+        <receiver
+            android:name=".EmployeeWidgetProvider2"
+            android:label="Recipe Widget 2">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget"/>
+        </receiver>
+
+        <service android:name=".EmployeeWidgetService2"/>
+
+        &lt;!&ndash; App Widget 3 (StackWidget) &ndash;&gt;
+        <receiver
+            android:name=".EmployeeStackWidgetProvider"
+            android:label="Recipe Widget 3">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/recipe_stack_widget_info"/>
+        </receiver>
+        -->
+
+        <!-- Register the TaskContentProvider -->
+        <!-- Set name, authorities, and exported attributes -->
+        <!-- exported = false limits access to this ContentProvider to only this app -->
+        <provider
+            android:name=".database.AppDatabaseProvider"
+            android:authorities="com.himebaugh.bakingapp"
+            android:exported="false"
+            android:syncable="true"/>
+
     </application>
 
 </manifest>
