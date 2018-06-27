@@ -14,7 +14,7 @@ import java.util.List;
 @Dao
 public interface RecipeDao {
 
-    @Query("SELECT * FROM recipe ORDER BY id")
+    @Query("SELECT * FROM " + AppDatabaseContract.RecipeEntry.TABLE_NAME + " ORDER BY "  + AppDatabaseContract.RecipeEntry._ID )
     LiveData<List<RecipeEntry>> loadAllRecipes();
 
     @Insert
@@ -26,17 +26,17 @@ public interface RecipeDao {
     @Delete
     void deleteRecipe(RecipeEntry recipeEntry);
 
-    @Query("SELECT * FROM " + AppDatabaseContract.RecipeEntry.TABLE_NAME + " WHERE id = :id")
+    @Query("SELECT * FROM " + AppDatabaseContract.RecipeEntry.TABLE_NAME + " WHERE "  + AppDatabaseContract.RecipeEntry._ID + " = :id")
     LiveData<RecipeEntry> loadRecipeById(int id);
 
     @Query("SELECT * FROM " + AppDatabaseContract.RecipeEntry.TABLE_NAME + " ORDER BY " + AppDatabaseContract.RecipeEntry.COLUMN_NAME)
     Cursor selectAll();
 
-    @Query("SELECT * FROM " + AppDatabaseContract.RecipeEntry.TABLE_NAME + " WHERE "  + AppDatabaseContract.RecipeEntry.COLUMN_ID + " = :id")
+    @Query("SELECT * FROM " + AppDatabaseContract.RecipeEntry.TABLE_NAME + " WHERE "  + AppDatabaseContract.RecipeEntry._ID + " = :id")
     Cursor selectById(long id);
 
-    @Query("SELECT recipe.*, ingredients.*, steps.* FROM recipe INNER JOIN ingredients ON ingredients.id = recipe.id INNER JOIN steps ON steps.recipeId = recipe.id")
-    Cursor selectAllWithChildElements();
+//    @Query("SELECT recipe.*, ingredients.*, steps.* FROM recipe INNER JOIN ingredients ON ingredients._id = recipe._id INNER JOIN steps ON steps.recipeId = recipe._id")
+//    Cursor selectAllWithChildElements();
 
 
     //    @Query("SELECT * FROM Book " +

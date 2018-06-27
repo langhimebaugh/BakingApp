@@ -13,10 +13,7 @@ import java.util.List;
 @Dao
 public interface IngredientDao {
 
-//    @Query("SELECT * from ingredients WHERE recipe_id = :recipeId ORDER BY _id")
-//    LiveData<List<Ingredient>> get(int recipeId);
-
-    @Query("SELECT * FROM ingredients WHERE recipeId = :recipeId ORDER BY id")
+    @Query("SELECT * FROM " + AppDatabaseContract.IngredientEntry.TABLE_NAME + " WHERE " + AppDatabaseContract.IngredientEntry.COLUMN_RECIPE_ID + " = :recipeId ORDER BY " + AppDatabaseContract.IngredientEntry._ID)
     LiveData<List<IngredientEntry>> loadIngredientsByRecipeId(int recipeId);
 
     @Insert
@@ -28,7 +25,7 @@ public interface IngredientDao {
     @Delete
     void deleteIngredient(IngredientEntry ingredientEntry);
 
-    @Query("SELECT * FROM ingredients WHERE id = :id")
+    @Query("SELECT * FROM " + AppDatabaseContract.IngredientEntry.TABLE_NAME + " WHERE " + AppDatabaseContract.IngredientEntry._ID + " = :id")
     LiveData<IngredientEntry> loadIngredientById(int id);
 
 //    @Query("SELECT * FROM Book " +

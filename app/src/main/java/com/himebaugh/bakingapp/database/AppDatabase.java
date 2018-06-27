@@ -26,7 +26,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     private static final String LOG_TAG = AppDatabase.class.getSimpleName();
     private static final Object LOCK = new Object();
-    public static final String DATABASE_NAME = "baked8";    // .db ??
+    public static final String DATABASE_NAME = "baked9";    // .db ??
     private static AppDatabase sInstance;                   // volatile ??
 
     public static AppDatabase getInstance(final Context context) {

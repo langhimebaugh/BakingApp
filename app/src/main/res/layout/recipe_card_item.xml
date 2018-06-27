@@ -5,7 +5,8 @@
                                     xmlns:app="http://schemas.android.com/apk/res-auto"
                                     xmlns:tools="http://schemas.android.com/tools"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content">
+                                    android:layout_height="wrap_content"
+                                    app:cardBackgroundColor="@android:color/white">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -14,11 +15,17 @@
         <ImageView
             android:id="@+id/iv_recipe_image"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="@dimen/recipe_card_image_height"
+            android:adjustViewBounds="true"
+            android:alpha="0.7"
             android:contentDescription="description"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            tools:src="@drawable/recipe_image_placeholder"/>
 
         <TextView
             android:id="@+id/tv_recipe_name"
@@ -30,11 +37,14 @@
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:textSize="22sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_recipe_image"
-            app:layout_constraintVertical_bias="0.0"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            tools:text="Recipe Name"/>
 
     </android.support.constraint.ConstraintLayout>
 

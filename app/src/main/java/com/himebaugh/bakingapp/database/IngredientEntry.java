@@ -15,17 +15,17 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 // TODO: recipeId column references a foreign key but it is not part of an index. This may trigger full table scans whenever parent table is modified so you are highly advised to create an index that covers this column.
 
-@Entity(tableName = "ingredients",
+@Entity(tableName = AppDatabaseContract.IngredientEntry.TABLE_NAME,
         foreignKeys = @ForeignKey(entity = RecipeEntry.class,
-                parentColumns = "id",
-                childColumns = "recipeId",
+                parentColumns = AppDatabaseContract.RecipeEntry._ID,
+                childColumns = AppDatabaseContract.IngredientEntry.COLUMN_RECIPE_ID,
                 onDelete = CASCADE,
                 onUpdate = CASCADE))
 
 public class IngredientEntry {
 
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    private int _id;
     private float quantity;
     private String measure;
     private String ingredient;
@@ -41,7 +41,7 @@ public class IngredientEntry {
     }
 
     public IngredientEntry(int id, float quantity, String measure, String ingredient, int recipeId) {
-        this.id = id;
+        this._id = id;
         this.quantity = quantity;
         this.measure = measure;
         this.ingredient = ingredient;
@@ -49,11 +49,11 @@ public class IngredientEntry {
     }
 
     public int getId() {
-        return id;
+        return _id;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this._id = id;
     }
 
     public float getQuantity() {

@@ -63,7 +63,7 @@ public class RecipeIntentService extends IntentService {
 
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
-            int idIndex = cursor.getColumnIndex(AppDatabaseContract.RecipeEntry.COLUMN_ID);
+            int idIndex = cursor.getColumnIndex(AppDatabaseContract.RecipeEntry._ID);
             int recipeNameIndex = cursor.getColumnIndex(AppDatabaseContract.RecipeEntry.COLUMN_NAME);
             recipeId = cursor.getLong(idIndex);
             recipeName = cursor.getString(recipeNameIndex);

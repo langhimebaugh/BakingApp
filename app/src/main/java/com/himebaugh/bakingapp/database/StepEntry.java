@@ -7,17 +7,17 @@ import android.arch.persistence.room.PrimaryKey;
 
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
-@Entity(tableName = "steps",
+@Entity(tableName = AppDatabaseContract.StepEntry.TABLE_NAME,
         foreignKeys = @ForeignKey(entity = RecipeEntry.class,
-                parentColumns = "id",
-                childColumns = "recipeId",
+                parentColumns = AppDatabaseContract.RecipeEntry._ID,
+                childColumns = AppDatabaseContract.StepEntry.COLUMN_RECIPE_ID,
                 onDelete = CASCADE,
                 onUpdate = CASCADE))
 
 public class StepEntry {
 
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    private int _id;
     private int stepNumber;
     private String shortDescription;
     private String description;
@@ -36,7 +36,7 @@ public class StepEntry {
     }
 
     public StepEntry(int id, int stepNumber, String shortDescription, String description, String videoURL, String thumbnailURL, int recipeId) {
-        this.id = id;
+        this._id = id;
         this.stepNumber = stepNumber;
         this.shortDescription = shortDescription;
         this.description = description;
@@ -46,11 +46,11 @@ public class StepEntry {
     }
 
     public int getId() {
-        return id;
+        return _id;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this._id = id;
     }
 
     public int getStepNumber() {

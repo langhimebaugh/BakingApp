@@ -3,6 +3,7 @@ package com.himebaugh.bakingapp;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
+import android.database.Cursor;
 import android.util.Log;
 
 
@@ -37,6 +38,16 @@ public class MainViewModel extends AndroidViewModel {
     public LiveData<List<RecipeEntry>> getRecipes() {
 
         return mDatabase.getRecipeDao().loadAllRecipes();
+    }
+
+    public Cursor getCursorOfRecipes() {
+
+        return mDatabase.getRecipeDao().selectAll();
+    }
+
+    public LiveData<RecipeEntry> getRecipes(int recipeId) {
+
+        return mDatabase.getRecipeDao().loadRecipeById(recipeId);
     }
 
     public LiveData<List<IngredientEntry>> getIngredients(int recipeId) {

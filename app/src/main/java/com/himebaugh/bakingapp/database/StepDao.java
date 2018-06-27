@@ -13,7 +13,7 @@ import java.util.List;
 @Dao
 public interface StepDao {
 
-    @Query("SELECT * FROM steps WHERE recipeId = :recipeId ORDER BY id")
+    @Query("SELECT * FROM " + AppDatabaseContract.StepEntry.TABLE_NAME + " WHERE " + AppDatabaseContract.StepEntry.COLUMN_RECIPE_ID + " = :recipeId ORDER BY " + AppDatabaseContract.StepEntry._ID)
     LiveData<List<StepEntry>> loadStepsByRecipeId(int recipeId);
 
     @Insert
@@ -25,7 +25,7 @@ public interface StepDao {
     @Delete
     void deleteStep(StepEntry stepEntry);
 
-    @Query("SELECT * FROM steps WHERE id = :id")
+    @Query("SELECT * FROM " + AppDatabaseContract.StepEntry.TABLE_NAME + " WHERE " + AppDatabaseContract.StepEntry._ID + " = :id")
     LiveData<StepEntry> loadStepById(int id);
 
     // ========================

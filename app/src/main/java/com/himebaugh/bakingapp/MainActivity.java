@@ -2,13 +2,14 @@ package com.himebaugh.bakingapp;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.os.AsyncTask;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -18,48 +19,32 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.himebaugh.bakingapp.adapter.RecipeCardAdapter;
 import com.himebaugh.bakingapp.database.AppDatabase;
-import com.himebaugh.bakingapp.database.IngredientDao;
 import com.himebaugh.bakingapp.database.IngredientEntry;
-import com.himebaugh.bakingapp.database.RecipeDao;
 import com.himebaugh.bakingapp.database.RecipeEntry;
-import com.himebaugh.bakingapp.database.StepDao;
 import com.himebaugh.bakingapp.database.StepEntry;
-import com.himebaugh.bakingapp.model.Ingredients;
-import com.himebaugh.bakingapp.model.Recipe;
-import com.himebaugh.bakingapp.model.Steps;
-import com.himebaugh.bakingapp.utils.NetworkUtil;
 
-import org.json.JSONException;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RecipeCardAdapter.RecipeCardAdapterOnClickHandler {
 
     private final static String TAG = MainActivity.class.getName();
+    private static final String RECIPE_KEY = "recipe";
+    private static final String BUNDLE = "bundle";
 
     private AppDatabase mDb;
+    RecyclerView mRecyclerView;
+    private RecipeCardAdapter mAdapter;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -70,27 +55,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // Load JSON from Internet...
-        // URL queryUrl = NetworkUtil.buildUrl(this, "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json");
-        
-        // new NetworkUtil.InitializeDatabaseTask().execute(queryUrl);
+        //
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+
+        // CHANGE GRID SpanCount ON ROTATION
+        GridLayoutManager layoutManager;
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            layoutManager = new GridLayoutManager(this, 1);
+        } else {
+            layoutManager = new GridLayoutManager(this, 3);
+        }
+
+        // May save position and reset upon orientation change???
+        // layoutManager.scrollToPosition(0);
+
+        mRecyclerView.setLayoutManager(layoutManager);
+        // allows for optimizations if all items are of the same size:
+        mRecyclerView.setHasFixedSize(true);
+
+        // Initialize the adapter and attach it to the RecyclerView
+        mAdapter = new RecipeCardAdapter(this);
+        mRecyclerView.setAdapter(mAdapter);
+        //
 
         mDb = AppDatabase.getInstance(getApplicationContext());
 
         setupViewModel();
-
-//        To add things to the database we need to invoke:
-//
-//        RepoDatabase
-//                .getInstance(context)
-//                .getRepoDao()
-//                .insert(new Repo(1, "Cool Repo Name", "url"));
-//        Getting things is also pretty simple:
-//
-//        List<Repo> allRepos = RepoDatabase
-//                .getInstance(MainActivity.this)
-//                .getRepoDao()
-//                .getAllRepos();
 
     }
 
@@ -105,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 Log.i(TAG, "recipeEntries.size(): " + recipeEntries.size());
                 // TODO: Create Adapter
-                // mAdapter.setTasks(recipeEntries);
+                mAdapter.loadRecipes(recipeEntries);
             }
         });
         viewModel.getIngredients(2).observe(this, new Observer<List<IngredientEntry>>() {
@@ -125,81 +115,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
     }
-
-//    public class RecipeQueryTask extends AsyncTask<URL, Void, ArrayList<Recipe>> {
-//
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//            // mLoadingIndicatorProgressBar.setVisibility(View.VISIBLE);
-//        }
-//
-//        @Override
-//        protected ArrayList<Recipe> doInBackground(URL... params) {
-//            URL url = params[0];
-//
-//            ArrayList<Recipe> recipeList = null;
-//
-//            try {
-//                recipeList = NetworkUtil.getRecipeList(getApplicationContext(), url);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//            return recipeList;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(ArrayList<Recipe> recipeList) {
-//
-//            RecipeDao recipeDao = AppDatabase.getInstance(getApplicationContext()).recipeDao();
-//            StepDao stepDao = AppDatabase.getInstance(getApplicationContext()).stepDao();
-//            IngredientDao ingredientDao = AppDatabase.getInstance(getApplicationContext()).ingredientDao();
-//
-//
-//            Log.i(TAG, "recipeList.toString(): " + recipeList.toString());
-//
-//            Log.i(TAG, "recipeList.size()" + recipeList.size());
-//
-//            for (Recipe recipe : recipeList) {
-//
-//                recipeDao.insertRecipe(new RecipeEntry(recipe.getName(), recipe.getServings(), recipe.getImage()));
-//
-//                Log.i(TAG, "listIterator: " + recipe.getName() + " " + recipe.getImage());
-//
-//                // ArrayList<Ingredients> ingredients, ArrayList<Steps> steps
-//
-//                for (Ingredients ingredients : recipe.getIngredients()) {
-//
-//                    ingredientDao.insertIngredient(new IngredientEntry(
-//                            ingredients.getQuantity(),
-//                            ingredients.getMeasure(),
-//                            ingredients.getIngredient(),
-//                            recipe.getId()));
-//
-//                    Log.i(TAG, "listIterator: " + ingredients.getIngredient() + " " + ingredients.getMeasure());
-//                }
-//
-//                for (Steps steps : recipe.getSteps()) {
-//
-//                    stepDao.insertStep(new StepEntry(
-//                            steps.getId(),
-//                            steps.getShortDescription(),
-//                            steps.getDescription(),
-//                            steps.getVideoURL(),
-//                            steps.getThumbnailURL(),
-//                            recipe.getId()));
-//
-//                    Log.i(TAG, "listIterator: " + steps.getDescription() + " " + steps.getVideoURL());
-//                }
-//
-//            }
-//
-//        }
-//
-//
-//    }
-
 
     @Override
     public void onBackPressed() {
@@ -248,5 +163,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onClick(@NonNull RecipeEntry recipe) {
+
+        // Launch RecipeStepListActivity adding the recipeId as an extra in the intent
+        Class destinationActivity = RecipeStepListActivity.class;  // RecipeActivity.class; RecipeStepListActivity.class;
+        Intent intent = new Intent(this, destinationActivity);
+        intent.putExtra(RecipeStepListActivity.EXTRA_RECIPE_ID, recipe.getId());
+        startActivity(intent);
     }
 }

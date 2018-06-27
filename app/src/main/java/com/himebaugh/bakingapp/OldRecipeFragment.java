@@ -2,21 +2,17 @@ package com.himebaugh.bakingapp;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 
-import com.himebaugh.bakingapp.adapter.RecipeCardAdapter;
+import com.himebaugh.bakingapp.adapter.IngredientAdapter;
 import com.himebaugh.bakingapp.database.AppDatabase;
 import com.himebaugh.bakingapp.database.IngredientEntry;
 import com.himebaugh.bakingapp.database.RecipeEntry;
@@ -27,16 +23,20 @@ import java.util.List;
 
 // This fragment displays all of the AndroidMe images in one large list
 // The list appears as a grid of images
-public class MasterListFragment extends Fragment {
+public class OldRecipeFragment extends Fragment {
 
-    private final static String TAG = MasterListFragment.class.getName();
+    private final static String TAG = OldRecipeFragment.class.getName();
+
+    public static final String ARG_RECIPE_ID = "recipe_id";
 
     private AppDatabase mDb;
     RecyclerView mRecyclerView;
-    private RecipeCardAdapter mAdapter;
+    private IngredientAdapter mAdapter;
+
+    private int mRecipeID;
 
     // Mandatory empty constructor
-    public MasterListFragment() {
+    public OldRecipeFragment() {
     }
 
     // Inflates the GridView of all AndroidMe images
@@ -44,15 +44,24 @@ public class MasterListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        final View rootView = inflater.inflate(R.layout.fragment_master_list, container, false);
+        Log.i(TAG, "onCreateView: 1");
+        //final View rootView = inflater.inflate(R.layout.fragment_master_list, container, false);
 
+        Log.i("LANG", "onCreateView: ");
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        // Get a reference to the GridView in the fragment_master_list xml layout file
+        //GridView gridView = (GridView) rootView.findViewById(R.id.images_grid_view);
 
-        // GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
+        // final View rootView = inflater.inflate(R.layout.fragment_master_list, container, false);
+        final View rootView = inflater.inflate(R.layout.recipe_step_list, container, false);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        Log.i(TAG, "onCreateView: 2");
+
+        mRecyclerView = rootView.findViewById(R.id.recyclerView);
+
+        LinearLayoutManager layoutManager;
+
+        layoutManager = new LinearLayoutManager(getContext());
 
         // May save position and reset upon orientation change???
         // layoutManager.scrollToPosition(0);
@@ -62,7 +71,7 @@ public class MasterListFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
 
         // Initialize the adapter and attach it to the RecyclerView
-        mAdapter = new RecipeCardAdapter(getContext());
+        mAdapter = new IngredientAdapter();
         mRecyclerView.setAdapter(mAdapter);
 
         // Return the root view
@@ -73,12 +82,23 @@ public class MasterListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.i(TAG, "onCreate: ");
+
         mDb = AppDatabase.getInstance(getContext());
 
-        setupViewModel();
+        if (getArguments() != null && getArguments().containsKey(ARG_RECIPE_ID)) {
+
+            // Load the dummy content specified by the fragment
+            loadAdaptersFromViewModel(getArguments().getInt(ARG_RECIPE_ID));
+        } else {
+            Log.i(TAG, "LANG WAS HERE!");
+            loadAdaptersFromViewModel(1);
+        }
+
+
     }
 
-    private void setupViewModel() {
+    private void loadAdaptersFromViewModel(int recipeID) {
 
         MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
@@ -90,20 +110,23 @@ public class MasterListFragment extends Fragment {
                 Log.i(TAG, "recipeEntries.size(): " + recipeEntries.size());
 
                 // TODO: Create Adapter
-                mAdapter.loadRecipes(recipeEntries);
+                // mAdapter.loadRecipes(recipeEntries);
 
-                Log.i(TAG, "mAdapter.getItemCount(): " + mAdapter.getItemCount() );
+                Log.i(TAG, "mAdapter.getItemCount(): " + mAdapter.getItemCount());
             }
         });
-        viewModel.getIngredients(2).observe(this, new Observer<List<IngredientEntry>>() {
+        viewModel.getIngredients(recipeID).observe(this, new Observer<List<IngredientEntry>>() {
             @Override
             public void onChanged(@Nullable List<IngredientEntry> ingredientEntries) {
                 Log.d(TAG, "Updating list of ingredients from LiveData in ViewModel");
 
                 Log.i(TAG, "ingredientEntries.size(): " + ingredientEntries.size());
+
+                // TODO: Create Adapter
+                mAdapter.loadIngredients(ingredientEntries);
             }
         });
-        viewModel.getSteps(1).observe(this, new Observer<List<StepEntry>>() {
+        viewModel.getSteps(recipeID).observe(this, new Observer<List<StepEntry>>() {
             @Override
             public void onChanged(@Nullable List<StepEntry> stepEntries) {
                 Log.d(TAG, "Updating list of steps from LiveData in ViewModel");
@@ -111,6 +134,10 @@ public class MasterListFragment extends Fragment {
                 Log.i(TAG, "stepEntries.size(): " + stepEntries.size());
             }
         });
+    }
+
+    public void setRecipeId(int recipeId) {
+        mRecipeID = recipeId;
     }
 
 }

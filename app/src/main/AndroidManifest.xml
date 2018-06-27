@@ -35,7 +35,9 @@
                 android:resource="@xml/recipe_widget_info"/>
         </receiver>
 
-        <service android:name=".RecipeIntentService" android:exported="false" />
+        <service
+            android:name=".RecipeIntentService"
+            android:exported="false"/>
 
         <!--
         &lt;!&ndash; App Widget 2 w/ Service &ndash;&gt;
@@ -67,6 +69,7 @@
         </receiver>
         -->
 
+
         <!-- Register the TaskContentProvider -->
         <!-- Set name, authorities, and exported attributes -->
         <!-- exported = false limits access to this ContentProvider to only this app -->
@@ -76,6 +79,35 @@
             android:exported="false"
             android:syncable="true"/>
 
+        <activity
+            android:name=".OldRecipeStepListActivity"
+            android:label="@string/title_recipestep_list"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".OldRecipeStepDetailActivity"
+            android:label="@string/title_recipestep_detail"
+            android:parentActivityName=".OldRecipeStepListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.himebaugh.bakingapp.OldRecipeStepListActivity"/>
+        </activity>
+        <!-- Implement Up Navigation with android:parentActivityName=".MainActivity" -->
+        <activity
+            android:name=".OldRecipeActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+        </activity>
+        <activity
+            android:name=".RecipeStepListActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+        </activity>
     </application>
 
 </manifest>
