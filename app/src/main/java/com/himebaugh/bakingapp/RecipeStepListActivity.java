@@ -2,9 +2,10 @@ package com.himebaugh.bakingapp;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +13,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
-import com.himebaugh.bakingapp.adapter.IngredientAdapter;
+import com.himebaugh.bakingapp.adapter.IngredientsAdapter;
+import com.himebaugh.bakingapp.adapter.StepsAdapter;
 import com.himebaugh.bakingapp.database.AppDatabase;
 import com.himebaugh.bakingapp.database.IngredientEntry;
 import com.himebaugh.bakingapp.database.RecipeEntry;
@@ -28,10 +30,11 @@ import java.util.List;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class RecipeStepListActivity extends AppCompatActivity {
+public class RecipeStepListActivity extends AppCompatActivity implements StepsAdapter.StepAdapterOnClickHandler {
 
     private final static String TAG = RecipeStepListActivity.class.getName();
-    public static final String EXTRA_RECIPE_ID = "extraRecipeId"; // Extra for the recipe ID to be received in the intent
+    public static final String EXTRA_RECIPE_ID = "extra_recipe_id"; // Extra for the recipe ID to be received in the intent
+    public static final String EXTRA_STEP_NUMBER = "extra_step_number";
 
     // Constant for default task id to be used when not in update mode
     private static final int DEFAULT_RECIPE_ID = -1;
@@ -43,7 +46,8 @@ public class RecipeStepListActivity extends AppCompatActivity {
      * device.
      */
     private boolean mTwoPane;
-    private IngredientAdapter mAdapter;
+    private IngredientsAdapter mIngredientsAdapter;
+    private StepsAdapter mStepsAdapter;
     private AppDatabase mDb;
     private ActionBar mActionBar;
 
@@ -52,7 +56,7 @@ public class RecipeStepListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // setContentView(R.layout.activity_item_list);
-        setContentView(R.layout.recipe_step_list);
+        setContentView(R.layout.activity_recipe_step_list);
 
         // Show the Up button in the action bar.
         mActionBar = getSupportActionBar();
@@ -73,6 +77,13 @@ public class RecipeStepListActivity extends AppCompatActivity {
             }
         }
 
+
+        // When returning from RecipeStepDetailActivity via the back button
+        // no arguments are passed.  How do I know what the RecipeID was?
+        // Anyway to pass back the ID with the back button???
+
+        Log.i(TAG, "onCreate: mRecipeId=" + mRecipeId);
+
         if (findViewById(R.id.recipe_step_detail_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-w900dp).
@@ -81,27 +92,21 @@ public class RecipeStepListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
-        // View recyclerView = findViewById(R.id.item_list);
+        RecyclerView ingredientsRecyclerView = findViewById(R.id.ingredients_recyclerView);
+        // if (ingredientsRecyclerView == null) throw new AssertionError();
+        LinearLayoutManager ingredientLayoutManager = new LinearLayoutManager(this);
+        ingredientsRecyclerView.setLayoutManager(ingredientLayoutManager);
+        ingredientsRecyclerView.setHasFixedSize(true);
+        mIngredientsAdapter = new IngredientsAdapter();
+        ingredientsRecyclerView.setAdapter(mIngredientsAdapter);
 
-        RecyclerView recyclerView = findViewById(R.id.recipe_step_list);
-
-        // assert recyclerView != null;
-        if (recyclerView == null) throw new AssertionError();
-
-        LinearLayoutManager layoutManager;
-
-        layoutManager = new LinearLayoutManager(this);
-
-        // May save position and reset upon orientation change???
-        // layoutManager.scrollToPosition(0);
-
-        recyclerView.setLayoutManager(layoutManager);
-        // allows for optimizations if all items are of the same size:
-        recyclerView.setHasFixedSize(true);
-
-        // Initialize the adapter and attach it to the RecyclerView
-        mAdapter = new IngredientAdapter();
-        recyclerView.setAdapter(mAdapter);
+        RecyclerView stepsRecyclerView = findViewById(R.id.steps_recyclerView);
+        // if (stepsRecyclerView == null) throw new AssertionError();
+        LinearLayoutManager stepLayoutManager = new LinearLayoutManager(this);
+        stepsRecyclerView.setLayoutManager(stepLayoutManager);
+        stepsRecyclerView.setHasFixedSize(true);
+        mStepsAdapter = new StepsAdapter(this);
+        stepsRecyclerView.setAdapter(mStepsAdapter);
 
         mDb = AppDatabase.getInstance(this);
 
@@ -112,7 +117,7 @@ public class RecipeStepListActivity extends AppCompatActivity {
 
         MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
-        viewModel.getRecipes(recipeID).observe(this, new Observer<RecipeEntry>() {
+        viewModel.getRecipe(recipeID).observe(this, new Observer<RecipeEntry>() {
             @Override
             public void onChanged(@Nullable RecipeEntry recipeEntry) {
 
@@ -131,19 +136,16 @@ public class RecipeStepListActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable List<IngredientEntry> ingredientEntries) {
                 Log.d(TAG, "Updating list of ingredients from LiveData in ViewModel");
-
                 Log.i(TAG, "ingredientEntries.size(): " + ingredientEntries.size());
-
-                // TODO: Create Adapter
-                mAdapter.loadIngredients(ingredientEntries);
+                mIngredientsAdapter.loadIngredients(ingredientEntries);
             }
         });
         viewModel.getSteps(recipeID).observe(this, new Observer<List<StepEntry>>() {
             @Override
             public void onChanged(@Nullable List<StepEntry> stepEntries) {
                 Log.d(TAG, "Updating list of steps from LiveData in ViewModel");
-
                 Log.i(TAG, "stepEntries.size(): " + stepEntries.size());
+                mStepsAdapter.loadSteps(stepEntries);
             }
         });
     }
@@ -160,4 +162,28 @@ public class RecipeStepListActivity extends AppCompatActivity {
         mRecipeId = savedInstanceState.getInt("recipeId");
     }
 
+    @Override
+    public void onClick(@NonNull StepEntry step) {
+
+        Log.i(TAG, "onClick: step.getVideoURL()=" + step.getVideoURL());
+
+        // play video
+
+        if (mTwoPane) {
+            Bundle arguments = new Bundle();
+            arguments.putInt(EXTRA_RECIPE_ID, mRecipeId);
+            arguments.putInt(EXTRA_STEP_NUMBER, step.getStepNumber());
+            //arguments.putString(RecipeStepDetailFragment.ARG_ITEM_ID, "1");
+            RecipeStepDetailFragment fragment = new RecipeStepDetailFragment();
+            fragment.setArguments(arguments);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.recipe_step_detail_container, fragment)
+                    .commit();
+        } else {
+            Intent intent = new Intent(this, RecipeStepDetailActivity.class);
+            intent.putExtra(EXTRA_RECIPE_ID, mRecipeId);
+            intent.putExtra(EXTRA_STEP_NUMBER, step.getStepNumber());
+            startActivity(intent);
+        }
+    }
 }

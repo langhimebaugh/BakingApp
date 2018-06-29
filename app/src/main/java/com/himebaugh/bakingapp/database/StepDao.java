@@ -28,6 +28,10 @@ public interface StepDao {
     @Query("SELECT * FROM " + AppDatabaseContract.StepEntry.TABLE_NAME + " WHERE " + AppDatabaseContract.StepEntry._ID + " = :id")
     LiveData<StepEntry> loadStepById(int id);
 
+    @Query("SELECT * FROM " + AppDatabaseContract.StepEntry.TABLE_NAME + " WHERE " + AppDatabaseContract.StepEntry.COLUMN_RECIPE_ID + " = :recipeId AND " + AppDatabaseContract.StepEntry.COLUMN_STEP_NUMBER + " = :stepNumber ")
+    LiveData<StepEntry> loadStepsByStepNumber(int recipeId, int stepNumber);
+
+
     // ========================
     // https://android.jlelse.eu/android-architecture-components-room-introduction-4774dd72a1ae
     // ========================

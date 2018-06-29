@@ -1,6 +1,5 @@
 package com.himebaugh.bakingapp.adapter;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,16 +10,15 @@ import android.widget.TextView;
 
 import com.himebaugh.bakingapp.R;
 import com.himebaugh.bakingapp.database.IngredientEntry;
-import com.himebaugh.bakingapp.database.RecipeEntry;
 
 import java.util.List;
 
-public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.ListItemViewHolder> {
+public class IngredientsAdapter extends RecyclerView.Adapter<IngredientsAdapter.ListItemViewHolder> {
 
-    private static final String TAG = IngredientAdapter.class.getSimpleName();
+    private static final String TAG = IngredientsAdapter.class.getSimpleName();
     private List<IngredientEntry> mIngredientList;
 
-    public IngredientAdapter() {
+    public IngredientsAdapter() {
     }
 
     @NonNull

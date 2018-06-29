@@ -12,7 +12,10 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="empty_view_text">Empty</string>
-    <string name="title_recipestep_list">RecipeSteps</string>
-    <string name="title_recipestep_detail">RecipeStep Detail</string>
-    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_recipe_step_list">Recipe Steps</string>
+    <string name="title_recipe_step_detail">Recipe Step Detail</string>
+
+    <string name="label_ingredients">Ingredients: </string>
+    <string name="label_steps">Steps: </string>
+
 </resources>

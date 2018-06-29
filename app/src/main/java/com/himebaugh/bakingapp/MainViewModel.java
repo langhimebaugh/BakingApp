@@ -45,7 +45,7 @@ public class MainViewModel extends AndroidViewModel {
         return mDatabase.getRecipeDao().selectAll();
     }
 
-    public LiveData<RecipeEntry> getRecipes(int recipeId) {
+    public LiveData<RecipeEntry> getRecipe(int recipeId) {
 
         return mDatabase.getRecipeDao().loadRecipeById(recipeId);
     }
@@ -58,6 +58,11 @@ public class MainViewModel extends AndroidViewModel {
     public LiveData<List<StepEntry>> getSteps(int recipeId) {
         
         return mDatabase.getStepDao().loadStepsByRecipeId(recipeId);
+    }
+
+    public LiveData<StepEntry> getStep(int recipeId, int stepNumber) {
+
+        return mDatabase.getStepDao().loadStepsByStepNumber(recipeId,stepNumber);
     }
 
 }
