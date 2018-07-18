@@ -1,15 +1,28 @@
 package com.himebaugh.bakingapp;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
+
+import com.himebaugh.bakingapp.adapter.StepsPagerAdapter;
+import com.himebaugh.bakingapp.database.IngredientEntry;
+import com.himebaugh.bakingapp.database.RecipeEntry;
+import com.himebaugh.bakingapp.database.StepEntry;
+
+import java.util.List;
 
 /**
  * An activity representing a single Item detail screen. This
@@ -17,19 +30,28 @@ import android.view.MenuItem;
  * item details are presented side-by-side with a list of items
  * in a {@link RecipeStepListActivity}.
  */
-public class RecipeStepDetailActivity extends AppCompatActivity {
+public class RecipeStepDetailActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener {
+
+    private final static String TAG = RecipeStepDetailActivity.class.getName();
 
     private static final int DEFAULT_RECIPE_ID = -1;
     private int mRecipeId = DEFAULT_RECIPE_ID;
     private static final int DEFAULT_STEP_NUMBER = 0;
     private int mStepNumber = DEFAULT_STEP_NUMBER;
 
+    public static final String EXTRA_CURRENT_STEP_NUMBER = "extra_current_step_number";
+
+    private StepsPagerAdapter mStepsPagerAdapter;
+    private ViewPager mViewPager;
+    private TabLayout mTabLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_step_detail);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
-        setSupportActionBar(toolbar);
+
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
+        //setSupportActionBar(toolbar);
 
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
@@ -48,6 +70,13 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
             }
         }
 
+        // Set up the ViewPager with the steps adapter.
+        mViewPager = findViewById(R.id.view_pager);
+        mViewPager.addOnPageChangeListener(this);
+
+        loadPagerAdapterFromViewModel(mRecipeId,mStepNumber);
+
+
         // savedInstanceState is non-null when there is fragment state
         // saved from previous configurations of this activity
         // (e.g. when rotating the screen from portrait to landscape).
@@ -57,18 +86,50 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
         //
         // http://developer.android.com/guide/components/fragments.html
         //
-        if (savedInstanceState == null) {
-            // Create the detail fragment and add it to the activity
-            // using a fragment transaction.
-            Bundle arguments = new Bundle();
-            arguments.putInt(RecipeStepListActivity.EXTRA_RECIPE_ID, mRecipeId );
-            arguments.putInt(RecipeStepListActivity.EXTRA_STEP_NUMBER, mStepNumber );
-            RecipeStepDetailFragment fragment = new RecipeStepDetailFragment();
-            fragment.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.recipe_step_detail_container, fragment)
-                    .commit();
-        }
+
+       // July 15
+//        if (savedInstanceState == null) {
+//            // Create the detail fragment and add it to the activity
+//            // using a fragment transaction.
+//            Bundle arguments = new Bundle();
+//            arguments.putInt(RecipeStepListActivity.EXTRA_RECIPE_ID, mRecipeId );
+//            arguments.putInt(RecipeStepListActivity.EXTRA_STEP_NUMBER, mStepNumber );
+//            RecipeStepDetailFragment fragment = new RecipeStepDetailFragment();
+//            fragment.setArguments(arguments);
+//            getSupportFragmentManager().beginTransaction()
+//                    .add(R.id.recipe_step_detail_container, fragment)
+//                    .commit();
+//        }
+    }
+
+    private void loadPagerAdapterFromViewModel(int recipeID, final int stepNumber) {
+
+        MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        viewModel.getSteps(recipeID).observe(this, new Observer<List<StepEntry>>() {
+            @Override
+            public void onChanged(@Nullable List<StepEntry> stepEntries) {
+                Log.d(TAG, "Updating list of steps from LiveData in ViewModel");
+                Log.i(TAG, "stepEntries.size(): " + stepEntries.size());
+                //============================================
+                // Create the adapter that will return a fragment for each of the Steps
+                // stepNumber gets passed through the StepsPagerAdapter to RecipeStepDetailFragment where it will
+                // start playing the video only if stepNumber matches the current page.
+                mStepsPagerAdapter = new StepsPagerAdapter(getBaseContext(),stepEntries,getSupportFragmentManager(), stepNumber);
+
+
+                mViewPager.setAdapter(mStepsPagerAdapter);
+
+                // display the selected step...
+                mViewPager.setCurrentItem(stepNumber);
+
+                mTabLayout = findViewById(R.id.tab_layout);
+                mTabLayout.setupWithViewPager(mViewPager);
+
+                //mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+                //mTabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+                //============================================
+            }
+        });
     }
 
     @Override
@@ -102,4 +163,34 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
         mStepNumber = savedInstanceState.getInt("stepNumber");
     }
 
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        Log.i(TAG, "onPageScrolled: position="+position);
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+
+        Log.i(TAG, "onPageSelected: position="+position);
+
+        //setCurrentItem(position);
+        mStepNumber = position;
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        Log.i(TAG, "onClick: v.getId()="+v.getId());
+//        int position = indexes.get(v.getId());
+//        if (mViewPager.getCurrentItem() != position) {
+//            mViewPager.setCurrentItem(position, false);
+//        }
+    }
 }

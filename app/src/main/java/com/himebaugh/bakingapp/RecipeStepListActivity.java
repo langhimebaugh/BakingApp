@@ -4,7 +4,9 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -35,6 +37,10 @@ public class RecipeStepListActivity extends AppCompatActivity implements StepsAd
     private final static String TAG = RecipeStepListActivity.class.getName();
     public static final String EXTRA_RECIPE_ID = "extra_recipe_id"; // Extra for the recipe ID to be received in the intent
     public static final String EXTRA_STEP_NUMBER = "extra_step_number";
+    public static final String EXTRA_STEP_LIST = "extra_step_list";
+
+    /* PREFS */
+    public static final String PREF_RECIPE_ID = "pref_recipe_id";
 
     // Constant for default task id to be used when not in update mode
     private static final int DEFAULT_RECIPE_ID = -1;
@@ -74,6 +80,14 @@ public class RecipeStepListActivity extends AppCompatActivity implements StepsAd
             Intent intent = getIntent();
             if (intent != null && intent.hasExtra(EXTRA_RECIPE_ID)) {
                 mRecipeId = intent.getIntExtra(EXTRA_RECIPE_ID, DEFAULT_RECIPE_ID);
+            } else {
+
+                // Maybe a better way, but...
+                // When returning from RecipeStepDetailActivity via the back button, no arguments are passed.
+                // Use the RecipeID that was last stored in shared preferences in the onClick method.
+                // For phones not tablets.
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+                mRecipeId = sharedPreferences.getInt(PREF_RECIPE_ID, DEFAULT_RECIPE_ID);
             }
         }
 
@@ -165,6 +179,13 @@ public class RecipeStepListActivity extends AppCompatActivity implements StepsAd
     @Override
     public void onClick(@NonNull StepEntry step) {
 
+        // Save Recipe Id
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(PREF_RECIPE_ID, mRecipeId);
+        editor.commit();
+
+
         Log.i(TAG, "onClick: step.getVideoURL()=" + step.getVideoURL());
 
         // play video
@@ -186,4 +207,5 @@ public class RecipeStepListActivity extends AppCompatActivity implements StepsAd
             startActivity(intent);
         }
     }
+
 }

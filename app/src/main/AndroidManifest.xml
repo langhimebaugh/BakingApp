@@ -112,11 +112,20 @@
         <activity
             android:name=".RecipeStepDetailActivity"
             android:label="@string/title_recipe_step_detail"
-            android:parentActivityName=".RecipeStepListActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:parentActivityName=".RecipeStepListActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".RecipeStepListActivity"/>
+        </activity>
+        <activity
+            android:name=".BasicActivity"
+            android:label="@string/title_activity_basic"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".TabActivity"
+            android:label="@string/title_activity_tab"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 

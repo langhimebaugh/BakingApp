@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -48,6 +49,13 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.ListItemView
 
         holder.stepNumber.setText(String.valueOf(step.getStepNumber()));
         holder.stepShortDescription.setText(step.getShortDescription());
+
+        if (step.getVideoURL().isEmpty()) {
+            holder.playArrow.setVisibility(View.INVISIBLE);
+        } else {
+            holder.playArrow.setVisibility(View.VISIBLE);
+        }
+
     }
 
     @Override
@@ -62,12 +70,14 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.ListItemView
 
         TextView stepNumber;
         TextView stepShortDescription;
+        ImageView playArrow;
 
         public ListItemViewHolder(View itemView) {
             super(itemView);
 
             stepNumber = itemView.findViewById(R.id.tv_step_number);
             stepShortDescription = itemView.findViewById(R.id.tv_short_description);
+            playArrow = itemView.findViewById(R.id.iv_play_arrow);
 
             itemView.setOnClickListener(this);
         }

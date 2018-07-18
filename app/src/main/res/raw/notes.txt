@@ -1,0 +1,40 @@
+Baking App – DUE July 23
+
+Overview
+In this project, you will create an app that will allow a user to select a recipe and see video-guided steps
+for how to complete it.
+
+This will involve
+• Use MediaPlayer/Exoplayer to display videos.
+• handle media loading
+• TODO: verify your user interfaces with UI tests
+• TODO: Handle error cases in Android.
+• TODO: Add a widget to your app experience.
+• Leverage a third-party library in your app.
+• Use Fragments to create a responsive design that works on phones and tablets.
+• adding accessibility features
+• TODO: allowing for localization
+
+Project Rubric
+• Display recipes - App should display recipes from provided network resource.
+• App Navigation - App should allow navigation between individual recipes and recipe steps.
+• TODO: Utilization of RecyclerView - App uses RecyclerView and can handle recipe steps that include videos or images.
+• Master Detail Flow and Fragments - Application uses Master Detail Flow to display recipe steps and navigation between them.
+• Exoplayer(MediaPlayer) to display videos - Application uses Exoplayer to display videos.
+• Proper utilization of video assets - Application properly initializes and releases video assets when appropriate.
+• Proper network asset utilization - Application should properly retrieve media assets from the provided network links. It should properly
+        handle network requests.
+• TODO: UI Testing - Application makes use of Espresso to test aspects of the UI.
+• Third-party libraries - Application sensibly utilizes a third-party library to enhance the app's features. That could be helper library to
+        interface with ContentProviders if you choose to store the recipes, a UI binding library to avoid writing findViewById a bunch of times, or
+        something similar.
+• Application has a companion homescreen widget.
+• TODO: Widget displays ingredient list for desired recipe.
+
+Core App Quality Guidelines - http://udacity.github.io/android-nanodegree-guidelines/core.html
+
+TODO: Move all the hardcoded Strings in your project to the strings.xml file.
+
+Review Sample Mocks
+
+TODO: Make sure your app functions properly on tablet devices as well as phones.
