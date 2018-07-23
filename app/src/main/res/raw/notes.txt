@@ -9,7 +9,7 @@ This will involve
 • handle media loading
 • TODO: verify your user interfaces with UI tests
 • TODO: Handle error cases in Android.
-• TODO: Add a widget to your app experience.
+• Add a widget to your app experience.
 • Leverage a third-party library in your app.
 • Use Fragments to create a responsive design that works on phones and tablets.
 • adding accessibility features
@@ -29,7 +29,11 @@ Project Rubric
         interface with ContentProviders if you choose to store the recipes, a UI binding library to avoid writing findViewById a bunch of times, or
         something similar.
 • Application has a companion homescreen widget.
-• TODO: Widget displays ingredient list for desired recipe.
+• Widget displays ingredient list for desired recipe.
+        clicking widget opens app to proper page... RecipeStepListActivity.
+        Back navigation works fine if app was open before clicking the widget.
+        However back navigation does NOT work if app is not open before clicking the widget.
+        Maybe something with the back stack.
 
 Core App Quality Guidelines - http://udacity.github.io/android-nanodegree-guidelines/core.html
 

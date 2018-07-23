@@ -1,11 +1,31 @@
 package com.himebaugh.bakingapp.widget;
 
+import com.himebaugh.bakingapp.model.Ingredients;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class StackWidgetItem {
+    private int recipeID;
+    private String recipeName;
+    private List<Ingredients> ingredientList;
 
-    public String text;
+    public StackWidgetItem(int recipeID, String recipeName, List<Ingredients> ingredientList) {
+        this.recipeID = recipeID;
+        this.recipeName = recipeName;
+        this.ingredientList = ingredientList;
+    }
 
-    public StackWidgetItem(String text) {
-        this.text = text;
+    public int getRecipeID() {
+        return recipeID;
+    }
+
+    public String getRecipeName() {
+        return recipeName;
+    }
+
+    public List<Ingredients> getIngredientList() {
+        return ingredientList;
     }
 
 }

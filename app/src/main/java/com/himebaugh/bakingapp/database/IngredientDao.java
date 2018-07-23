@@ -16,6 +16,9 @@ public interface IngredientDao {
     @Query("SELECT * FROM " + AppDatabaseContract.IngredientEntry.TABLE_NAME + " WHERE " + AppDatabaseContract.IngredientEntry.COLUMN_RECIPE_ID + " = :recipeId ORDER BY " + AppDatabaseContract.IngredientEntry._ID)
     LiveData<List<IngredientEntry>> loadIngredientsByRecipeId(int recipeId);
 
+    @Query("SELECT * FROM " + AppDatabaseContract.IngredientEntry.TABLE_NAME + " WHERE " + AppDatabaseContract.IngredientEntry.COLUMN_RECIPE_ID + " = :recipeId ORDER BY " + AppDatabaseContract.IngredientEntry._ID)
+    List<IngredientEntry> loadIngredientListByRecipeId(int recipeId);
+
     @Insert
     void insertIngredient(IngredientEntry ingredientEntry);
 

@@ -10,7 +10,7 @@ import android.widget.RemoteViews;
 import com.himebaugh.bakingapp.R;
 import com.himebaugh.bakingapp.RecipeStepListActivity;
 
-public class RecipeWidgetProvider extends AppWidgetProvider {
+public class WidgetProvider extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int recipeId, String recipeName, int appWidgetId) {
 
@@ -23,7 +23,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
         // Construct the RemoteViews object
-        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget);
 
         // Widgets allow click handlers to only launch pending intents
         // views.setOnClickPendingIntent(R.id.widget_plant_image, pendingIntent);
@@ -39,7 +39,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // Start the intent service update widget action, the service takes care of updating the widgets UI
         // Service will call method below...
-        RecipeWidgetIntentService.startActionUpdateRecipeWidgets(context);
+        WidgetIntentService.startActionUpdateRecipeWidgets(context);
     }
 
     public static void updateRecipeWidgets(Context context, AppWidgetManager appWidgetManager, int recipeId, String recipeName, int[] appWidgetIds) {
