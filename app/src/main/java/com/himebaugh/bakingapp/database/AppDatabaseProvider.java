@@ -100,7 +100,7 @@ public class AppDatabaseProvider extends ContentProvider {
                 id = uri.getPathSegments().get(1);
 
                 // Use selections/selectionArgs to filter for this ID
-                returnCursor = mRecipeDao.selectById(ContentUris.parseId(uri));
+                returnCursor = mRecipeDao.selectById( (int) ContentUris.parseId(uri));
 
                 break;
         }

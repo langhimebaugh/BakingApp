@@ -16,7 +16,7 @@ public class AppDatabaseContract {
     public static final String PATH_INGREDIENTS = "ingredients";
     public static final String PATH_STEPS = "steps";
 
-    public static final long INVALID_RECIPE_ID = -1;
+    public static final int INVALID_RECIPE_ID = -1;
 
     // Inner class that defines the table contents of the recipe table
     public static final class RecipeEntry implements BaseColumns {

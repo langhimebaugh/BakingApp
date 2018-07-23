@@ -24,20 +24,45 @@
             </intent-filter>
         </activity>
 
-        <!-- App Widget 1 w/ Service -->
-        <receiver android:name=".RecipeWidgetProvider">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-            </intent-filter>
-
+        <!-- Implement Up Navigation with android:parentActivityName=".MainActivity" -->
+        <activity
+            android:name=".RecipeStepListActivity"
+            android:label="@string/title_recipe_step_list"
+            android:parentActivityName=".MainActivity">
             <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/recipe_widget_info"/>
-        </receiver>
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+        </activity>
 
-        <service
-            android:name=".RecipeIntentService"
-            android:exported="false"/>
+        <activity
+            android:name=".RecipeStepDetailActivity"
+            android:label="@string/title_recipe_step_detail"
+            android:parentActivityName=".RecipeStepListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".RecipeStepListActivity"/>
+        </activity>
+
+        <provider
+            android:name=".database.AppDatabaseProvider"
+            android:authorities="com.himebaugh.bakingapp"
+            android:exported="false"
+            android:syncable="true"/>
+
+        <!-- App Widget 1 w/ Service -->
+        <!--<receiver android:name=".widget.RecipeWidgetProvider">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>-->
+            <!--</intent-filter>-->
+
+            <!--<meta-data-->
+                <!--android:name="android.appwidget.provider"-->
+                <!--android:resource="@xml/recipe_widget_info"/>-->
+        <!--</receiver>-->
+
+        <!--<service-->
+            <!--android:name=".widget.RecipeWidgetIntentService"-->
+            <!--android:exported="false"/>-->
 
         <!--
         &lt;!&ndash; App Widget 2 w/ Service &ndash;&gt;
@@ -70,63 +95,32 @@
         -->
 
 
-        <!-- Register the TaskContentProvider -->
-        <!-- Set name, authorities, and exported attributes -->
-        <!-- exported = false limits access to this ContentProvider to only this app -->
-        <provider
-            android:name=".database.AppDatabaseProvider"
-            android:authorities="com.himebaugh.bakingapp"
+        <receiver android:name=".widget.ExampleStackWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/example_stack_widget_info"/>
+        </receiver>
+        <service
+            android:name=".widget.ExampleStackWidgetService"
             android:exported="false"
-            android:syncable="true"/>
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
-        <activity
-            android:name=".OldRecipeStepListActivity"
-            android:label="@string/title_recipe_step_list"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity
-            android:name=".OldRecipeStepDetailActivity"
-            android:label="@string/title_recipe_step_detail"
-            android:parentActivityName=".OldRecipeStepListActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+        <receiver android:name=".widget.LangsStackWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
             <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.himebaugh.bakingapp.OldRecipeStepListActivity"/>
-        </activity>
-        <!-- Implement Up Navigation with android:parentActivityName=".MainActivity" -->
-        <activity
-            android:name=".OldRecipeActivity"
-            android:parentActivityName=".MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
-        </activity>
-        <activity
-            android:name=".RecipeStepListActivity"
-            android:label="@string/title_recipe_step_list"
-            android:parentActivityName=".MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
-        </activity>
-        <activity
-            android:name=".RecipeStepDetailActivity"
-            android:label="@string/title_recipe_step_detail"
-            android:parentActivityName=".RecipeStepListActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".RecipeStepListActivity"/>
-        </activity>
-        <activity
-            android:name=".BasicActivity"
-            android:label="@string/title_activity_basic"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity
-            android:name=".TabActivity"
-            android:label="@string/title_activity_tab"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+                android:name="android.appwidget.provider"
+                android:resource="@xml/langs_stack_widget_info"/>
+        </receiver>
+        <service
+            android:name=".widget.LangsStackWidgetService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+
     </application>
 
 </manifest>

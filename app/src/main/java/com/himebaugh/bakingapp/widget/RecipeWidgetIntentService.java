@@ -1,32 +1,37 @@
-package com.himebaugh.bakingapp;
+package com.himebaugh.bakingapp.widget;
 
 import android.app.IntentService;
 import android.appwidget.AppWidgetManager;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
+import android.support.annotation.Nullable;
 
+import com.himebaugh.bakingapp.R;
 import com.himebaugh.bakingapp.database.AppDatabaseContract;
+import com.himebaugh.bakingapp.database.DataViewModel;
+import com.himebaugh.bakingapp.database.RecipeEntry;
 
-import static com.himebaugh.bakingapp.database.AppDatabaseContract.BASE_CONTENT_URI;
+import java.util.List;
+
 import static com.himebaugh.bakingapp.database.AppDatabaseContract.INVALID_RECIPE_ID;
-import static com.himebaugh.bakingapp.database.AppDatabaseContract.PATH_RECIPES;
 
 // An {@link IntentService} subclass for handling asynchronous task requests in a service on a separate handler thread.
 
-public class RecipeIntentService extends IntentService {
+public class RecipeWidgetIntentService extends IntentService {
 
-
+    private final static String TAG = RecipeWidgetIntentService.class.getName();
     private static final String ACTION_UPDATE_RECIPE_WIDGET = "com.himebaugh.bakingapp.action.UPDATE_RECIPE_WIDGET";
 
-    public RecipeIntentService() {
+    public RecipeWidgetIntentService() {
         super("RecipeIntentService");
     }
 
     public static void startActionUpdateRecipeWidgets(Context context) {
-        Intent intent = new Intent(context, RecipeIntentService.class);
+        Intent intent = new Intent(context, RecipeWidgetIntentService.class);
         intent.setAction(ACTION_UPDATE_RECIPE_WIDGET);
         context.startService(intent);
     }
@@ -42,6 +47,19 @@ public class RecipeIntentService extends IntentService {
     }
 
     private void handleActionUpdateRecipeWidgets() {
+
+        // Can't figure out how to use ViewModel here...
+
+//        DataViewModel viewModel = ViewModelProviders.of(this).get(DataViewModel.class);
+//
+//        viewModel.getCursorOfRecipes();
+//
+//        viewModel.getRecipes().observe(this, new Observer<List<RecipeEntry>>() {
+//            @Override
+//            public void onChanged(@Nullable List<RecipeEntry> recipeEntries) {
+//
+//            }
+//        });
 
         // TODO: Handle action Update Recipe Widgets
 
@@ -59,13 +77,15 @@ public class RecipeIntentService extends IntentService {
 
         // Extract the recipe details
         String recipeName = "Fish Soup"; // Default in case our recipe is empty
-        long recipeId = INVALID_RECIPE_ID;
+        // long recipeId = INVALID_RECIPE_ID;
+        int recipeId = INVALID_RECIPE_ID;
 
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             int idIndex = cursor.getColumnIndex(AppDatabaseContract.RecipeEntry._ID);
             int recipeNameIndex = cursor.getColumnIndex(AppDatabaseContract.RecipeEntry.COLUMN_NAME);
-            recipeId = cursor.getLong(idIndex);
+            // recipeId = cursor.getLong(idIndex);
+            recipeId = cursor.getInt(idIndex);
             recipeName = cursor.getString(recipeNameIndex);
             cursor.close();
         }

@@ -17,6 +17,9 @@ public interface RecipeDao {
     @Query("SELECT * FROM " + AppDatabaseContract.RecipeEntry.TABLE_NAME + " ORDER BY "  + AppDatabaseContract.RecipeEntry._ID )
     LiveData<List<RecipeEntry>> loadAllRecipes();
 
+    @Query("SELECT * FROM " + AppDatabaseContract.RecipeEntry.TABLE_NAME + " ORDER BY "  + AppDatabaseContract.RecipeEntry._ID )
+    List<RecipeEntry> loadRecipeList();
+
     @Insert
     void insertRecipe(RecipeEntry recipeEntry);
 
@@ -33,7 +36,7 @@ public interface RecipeDao {
     Cursor selectAll();
 
     @Query("SELECT * FROM " + AppDatabaseContract.RecipeEntry.TABLE_NAME + " WHERE "  + AppDatabaseContract.RecipeEntry._ID + " = :id")
-    Cursor selectById(long id);
+    Cursor selectById(int id);
 
 //    @Query("SELECT recipe.*, ingredients.*, steps.* FROM recipe INNER JOIN ingredients ON ingredients._id = recipe._id INNER JOIN steps ON steps.recipeId = recipe._id")
 //    Cursor selectAllWithChildElements();

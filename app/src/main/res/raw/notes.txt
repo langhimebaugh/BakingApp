@@ -18,7 +18,7 @@ This will involve
 Project Rubric
 • Display recipes - App should display recipes from provided network resource.
 • App Navigation - App should allow navigation between individual recipes and recipe steps.
-• TODO: Utilization of RecyclerView - App uses RecyclerView and can handle recipe steps that include videos or images.
+• Utilization of RecyclerView - App uses RecyclerView and can handle recipe steps that include videos or images.
 • Master Detail Flow and Fragments - Application uses Master Detail Flow to display recipe steps and navigation between them.
 • Exoplayer(MediaPlayer) to display videos - Application uses Exoplayer to display videos.
 • Proper utilization of video assets - Application properly initializes and releases video assets when appropriate.
@@ -37,4 +37,4 @@ TODO: Move all the hardcoded Strings in your project to the strings.xml file.
 
 Review Sample Mocks
 
-TODO: Make sure your app functions properly on tablet devices as well as phones.
+Make sure your app functions properly on tablet devices as well as phones.

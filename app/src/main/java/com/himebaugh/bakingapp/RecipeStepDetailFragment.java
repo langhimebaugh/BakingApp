@@ -5,50 +5,42 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
-import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.Renderer;
-import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
-import com.google.android.exoplayer2.audio.AudioRendererEventListener;
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
-import com.google.android.exoplayer2.metadata.MetadataOutput;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
-import com.google.android.exoplayer2.text.TextOutput;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
-import com.google.android.exoplayer2.video.VideoRendererEventListener;
+import com.himebaugh.bakingapp.database.DataViewModel;
 import com.himebaugh.bakingapp.database.RecipeEntry;
 import com.himebaugh.bakingapp.database.StepEntry;
+import com.himebaugh.bakingapp.utils.NetworkUtil;
+import com.squareup.picasso.Picasso;
 
 /**
  * A fragment representing a single Item detail screen.
@@ -91,8 +83,15 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
     private SimpleExoPlayer mExoPlayer;
     // private SimpleExoPlayerView mPlayerView;
     private PlayerView mPlayerView;
+    private ImageView mThumbnailView;
     private Uri mVideoUri;
+    private String mThumbnailUrl;
+    private TextView mDetailTextView;
+    private NestedScrollView mScrollView;
+
     private boolean mPlayWhenReady = true;
+
+    private boolean mLandscapeMobileLayout;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -145,6 +144,15 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
         // Initialize the player view.
         mPlayerView = rootView.findViewById(R.id.player_view);
 
+        mScrollView = rootView.findViewById(R.id.scroll_view);
+        mThumbnailView = rootView.findViewById(R.id.iv_recipe_step_thumbnail);
+        mDetailTextView = rootView.findViewById(R.id.tv_recipe_step_detail);
+
+        if (rootView.findViewById(R.id.landscape_mobile_layout) != null) {
+            mLandscapeMobileLayout = true;
+        } else {
+            mLandscapeMobileLayout = false;
+        }
 
         // Load the question mark as the background image until the user answers the question.
         // mPlayerView.setDefaultArtwork(BitmapFactory.decodeResource(getResources(), R.drawable.question_mark));
@@ -167,7 +175,7 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
 
     private void loadStepFromViewModel(int recipeID, int stepNumber) {
 
-        MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        DataViewModel viewModel = ViewModelProviders.of(this).get(DataViewModel.class);
 
         viewModel.getRecipe(recipeID).observe(this, new Observer<RecipeEntry>() {
             @Override
@@ -192,61 +200,111 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
             @Override
             public void onChanged(@Nullable StepEntry stepEntry) {
 
-                Log.i(TAG, "LANG: >>>>>" + stepEntry.getVideoURL());
+                recipeStepDetailTextView.setText(stepEntry.getDescription());
 
                 mVideoUri = Uri.parse(stepEntry.getVideoURL()).buildUpon().build();
-                Log.i(TAG, "loadStepFromViewModel onChanged: initializePlayer(mVideoUri)");
-                initializePlayer(mVideoUri);
+                mThumbnailUrl = stepEntry.getThumbnailURL();
 
-                recipeStepDetailTextView.setText(stepEntry.getDescription());
+                //===================================
+                // if video not available...
+                // set...
+                // player_view = invisible
+                // iv_recipe_step_thumbnail = visible
+                // tv_recipe_step_detail = visible
+                //===================================
+
+                // if internet available...
+                if (NetworkUtil.isNetworkAvailable((getContext()))) {
+
+                    // if VideoURL is available, show the video
+                    if (!mVideoUri.toString().isEmpty()) {
+                        mPlayerView.setVisibility(View.VISIBLE);
+                        mThumbnailView.setVisibility(View.INVISIBLE);
+                        if (mLandscapeMobileLayout) {
+                            mScrollView.setVisibility(View.GONE);
+                            mDetailTextView.setVisibility(View.INVISIBLE);
+                        } else {
+                            mDetailTextView.setVisibility(View.VISIBLE);
+                        }
+                        initializePlayer(mVideoUri);
+
+                    } else {
+                        // otherwise show the thumbnail image
+                        mScrollView.setVisibility(View.VISIBLE);
+                        mThumbnailView.setVisibility(View.VISIBLE);
+                        mDetailTextView.setVisibility(View.VISIBLE);
+                        mPlayerView.setVisibility(View.GONE);
+                        displayImage(mThumbnailUrl);
+                    }
+
+                } else {
+                    // otherwise show the thumbnail image
+                    // will default to local resource file
+                    mScrollView.setVisibility(View.VISIBLE);
+                    mThumbnailView.setVisibility(View.VISIBLE);
+                    mDetailTextView.setVisibility(View.VISIBLE);
+                    mPlayerView.setVisibility(View.GONE);
+                    displayImage(mThumbnailUrl);
+                }
+
             }
         });
 
     }
 
-
     /**
      * Initialize ExoPlayer.
      *
-     * @param mediaUri The URI of the sample to play.
+     * @param videoUri The URI of the sample to play.
      */
-    private void initializePlayer(Uri mediaUri) {
+    private void initializePlayer(Uri videoUri) {
 
-        Log.i(TAG, "initializePlayer: mediaUri=" + mediaUri.toString());
+        Log.i(TAG, "initializePlayer: mediaUri=" + videoUri.toString());
 
         if (mExoPlayer == null) {
+            // Create an instance of the ExoPlayer.
+            TrackSelector trackSelector = new DefaultTrackSelector();
+            // LoadControl loadControl = new DefaultLoadControl();
+            mExoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector);
+            mPlayerView.setPlayer(mExoPlayer);
+            // Set the ExoPlayer.EventListener to this activity.
+            mExoPlayer.addListener(this);
 
-            if (mediaUri.toString().isEmpty()) {
-                mPlayerView.setVisibility(View.INVISIBLE);
-            } else {
-                // Create an instance of the ExoPlayer.
-                TrackSelector trackSelector = new DefaultTrackSelector();
-                // LoadControl loadControl = new DefaultLoadControl();
-                mExoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector);
-                mPlayerView.setPlayer(mExoPlayer);
-                // Set the ExoPlayer.EventListener to this activity.
-                mExoPlayer.addListener(this);
+            // Prepare the MediaSource.
+            String userAgent = Util.getUserAgent(getContext(), "BakingApp");
 
-                // Prepare the MediaSource.
-                String userAgent = Util.getUserAgent(getContext(), "BakingApp");
+            DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(getContext(), userAgent);
 
-                DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(getContext(), userAgent);
+            MediaSource mediaSource = new ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(videoUri);
 
-                MediaSource mediaSource = new ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(mediaUri);
+            mExoPlayer.prepare(mediaSource);
+            // onRestore
+            if (mCurrentPosition != 0)
+                mExoPlayer.seekTo(mCurrentPosition);
 
-                mExoPlayer.prepare(mediaSource);
-                // onRestore
-                if (mCurrentPosition != 0)
-                    mExoPlayer.seekTo(mCurrentPosition);
-
-                mExoPlayer.setPlayWhenReady(mPlayWhenReady);
-                //mExoPlayer.setPlayWhenReady(true);
-                mPlayerView.setVisibility(View.VISIBLE);
-            }
-
+            mExoPlayer.setPlayWhenReady(mPlayWhenReady);
+            //mExoPlayer.setPlayWhenReady(true);
+            mPlayerView.setVisibility(View.VISIBLE);
         }
     }
 
+    // if a recipe step has no video, or can't load videos due to no network connection
+    private void displayImage(String thumbnailUrl) {
+
+        if (thumbnailUrl.isEmpty()) {
+            Picasso.get()
+                    .load(R.drawable.recipe_image_placeholder)
+                    .placeholder(R.drawable.recipe_image_placeholder)
+                    .error(R.drawable.recipe_image_placeholder)
+                    .into(mThumbnailView);
+        } else {
+            Picasso.get()
+                    .load(thumbnailUrl)
+                    .placeholder(R.drawable.recipe_image_placeholder)
+                    .error(R.drawable.recipe_image_placeholder)
+                    .into(mThumbnailView);
+        }
+    }
 
     @Override
     public void onStart() {
@@ -307,9 +365,9 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
      * Release ExoPlayer.
      */
     private void releasePlayer() {
-            mExoPlayer.stop();
-            mExoPlayer.release();
-            mExoPlayer = null;
+        mExoPlayer.stop();
+        mExoPlayer.release();
+        mExoPlayer = null;
     }
 
     @Override

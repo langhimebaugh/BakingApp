@@ -1,4 +1,4 @@
-package com.himebaugh.bakingapp;
+package com.himebaugh.bakingapp.widget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -7,17 +7,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
+import com.himebaugh.bakingapp.R;
+import com.himebaugh.bakingapp.RecipeStepListActivity;
+
 public class RecipeWidgetProvider extends AppWidgetProvider {
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, long recipeId, String recipeName, int appWidgetId) {
+    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int recipeId, String recipeName, int appWidgetId) {
 
         CharSequence widgetText = recipeName;
 
         // Create an Intent to launch MainActivity when clicked
-        Intent intent = new Intent(context, MainActivity.class);
-//        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, allWidgetIds);
-//        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
-//        intent.putExtra(BakingWidgetProvider.CONFIGURE_START, position);
+        Intent intent = new Intent(context, RecipeStepListActivity.class);
+        intent.putExtra(RecipeStepListActivity.EXTRA_RECIPE_ID, recipeId);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
@@ -38,10 +39,10 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // Start the intent service update widget action, the service takes care of updating the widgets UI
         // Service will call method below...
-        RecipeIntentService.startActionUpdateRecipeWidgets(context);
+        RecipeWidgetIntentService.startActionUpdateRecipeWidgets(context);
     }
 
-    public static void updateRecipeWidgets(Context context, AppWidgetManager appWidgetManager, long recipeId, String recipeName, int[] appWidgetIds) {
+    public static void updateRecipeWidgets(Context context, AppWidgetManager appWidgetManager, int recipeId, String recipeName, int[] appWidgetIds) {
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, recipeId, recipeName, appWidgetId);
         }

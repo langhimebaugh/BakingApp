@@ -5,11 +5,8 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
@@ -18,8 +15,7 @@ import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
 import com.himebaugh.bakingapp.adapter.StepsPagerAdapter;
-import com.himebaugh.bakingapp.database.IngredientEntry;
-import com.himebaugh.bakingapp.database.RecipeEntry;
+import com.himebaugh.bakingapp.database.DataViewModel;
 import com.himebaugh.bakingapp.database.StepEntry;
 
 import java.util.List;
@@ -104,7 +100,7 @@ public class RecipeStepDetailActivity extends AppCompatActivity implements ViewP
 
     private void loadPagerAdapterFromViewModel(int recipeID, final int stepNumber) {
 
-        MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        DataViewModel viewModel = ViewModelProviders.of(this).get(DataViewModel.class);
         viewModel.getSteps(recipeID).observe(this, new Observer<List<StepEntry>>() {
             @Override
             public void onChanged(@Nullable List<StepEntry> stepEntries) {

@@ -26,7 +26,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     private static final String LOG_TAG = AppDatabase.class.getSimpleName();
     private static final Object LOCK = new Object();
-    public static final String DATABASE_NAME = "baked9";    // .db ??
+    public static final String DATABASE_NAME = "baked14";    // .db ??
     private static AppDatabase sInstance;                   // volatile ??
 
     public static AppDatabase getInstance(final Context context) {
@@ -36,7 +36,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 sInstance = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, AppDatabase.DATABASE_NAME)
 
                         // TODO: Temporary
-                        .allowMainThreadQueries()
+                        // .allowMainThreadQueries()
                         // To Populate database
                         .addCallback(new Callback() {
                             @Override
@@ -61,6 +61,9 @@ public abstract class AppDatabase extends RoomDatabase {
 
 
                                 URL url = NetworkUtil.buildUrl(context.getApplicationContext(), "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json");
+
+                                // URL url = NetworkUtil.buildUrl(context.getApplicationContext(), "https://7gdjdtbej1.execute-api.us-west-2.amazonaws.com/prod/recipes?total_recipe=6&nullable_resource=true");
+
 
                                 // ================================
                                 // ALL 3 Options below will work!

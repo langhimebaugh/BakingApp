@@ -1,4 +1,4 @@
-package com.himebaugh.bakingapp;
+package com.himebaugh.bakingapp.database;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
@@ -7,24 +7,18 @@ import android.database.Cursor;
 import android.util.Log;
 
 
-import com.himebaugh.bakingapp.database.AppDatabase;
-import com.himebaugh.bakingapp.database.IngredientDao;
-import com.himebaugh.bakingapp.database.IngredientEntry;
-import com.himebaugh.bakingapp.database.RecipeEntry;
-import com.himebaugh.bakingapp.database.StepEntry;
-
 import java.util.List;
 
-public class MainViewModel extends AndroidViewModel {
+public class DataViewModel extends AndroidViewModel {
 
     // Constant for logging
-    private static final String TAG = MainViewModel.class.getSimpleName();
+    private static final String TAG = DataViewModel.class.getSimpleName();
 
     private AppDatabase mDatabase;
     private LiveData<List<RecipeEntry>> recipes;
     private LiveData<List<IngredientEntry>> ingredients;
 
-    public MainViewModel(Application application) {
+    public DataViewModel(Application application) {
         super(application);
         mDatabase = AppDatabase.getInstance(this.getApplication());
         Log.d(TAG, "Actively retrieving the recipes from the DataBase");

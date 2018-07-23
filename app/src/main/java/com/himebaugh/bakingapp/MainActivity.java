@@ -21,6 +21,7 @@ import android.view.MenuItem;
 
 import com.himebaugh.bakingapp.adapter.RecipeCardAdapter;
 import com.himebaugh.bakingapp.database.AppDatabase;
+import com.himebaugh.bakingapp.database.DataViewModel;
 import com.himebaugh.bakingapp.database.IngredientEntry;
 import com.himebaugh.bakingapp.database.RecipeEntry;
 import com.himebaugh.bakingapp.database.StepEntry;
@@ -86,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void setupViewModel() {
 
-        MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        DataViewModel viewModel = ViewModelProviders.of(this).get(DataViewModel.class);
 
         viewModel.getRecipes().observe(this, new Observer<List<RecipeEntry>>() {
             @Override

@@ -2,7 +2,6 @@ package com.himebaugh.bakingapp;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,6 +17,7 @@ import android.util.Log;
 import com.himebaugh.bakingapp.adapter.IngredientsAdapter;
 import com.himebaugh.bakingapp.adapter.StepsAdapter;
 import com.himebaugh.bakingapp.database.AppDatabase;
+import com.himebaugh.bakingapp.database.DataViewModel;
 import com.himebaugh.bakingapp.database.IngredientEntry;
 import com.himebaugh.bakingapp.database.RecipeEntry;
 import com.himebaugh.bakingapp.database.StepEntry;
@@ -79,7 +79,10 @@ public class RecipeStepListActivity extends AppCompatActivity implements StepsAd
         } else {
             Intent intent = getIntent();
             if (intent != null && intent.hasExtra(EXTRA_RECIPE_ID)) {
+                Log.i(TAG, "onCreate: ");
                 mRecipeId = intent.getIntExtra(EXTRA_RECIPE_ID, DEFAULT_RECIPE_ID);
+                // mRecipeId = (int) intent.getLongExtra(EXTRA_RECIPE_ID, DEFAULT_RECIPE_ID);
+                Log.i(TAG, "onCreate: mRecipeId="+mRecipeId);
             } else {
 
                 // Maybe a better way, but...
@@ -129,7 +132,7 @@ public class RecipeStepListActivity extends AppCompatActivity implements StepsAd
 
     private void loadAdaptersFromViewModel(int recipeID) {
 
-        MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        DataViewModel viewModel = ViewModelProviders.of(this).get(DataViewModel.class);
 
         viewModel.getRecipe(recipeID).observe(this, new Observer<RecipeEntry>() {
             @Override
@@ -143,7 +146,8 @@ public class RecipeStepListActivity extends AppCompatActivity implements StepsAd
         });
 
 
-        Log.i(TAG, "viewModel.getCursorOfRecipes().getCount(): " + viewModel.getCursorOfRecipes().getCount());
+        //
+        // Log.i(TAG, "viewModel.getCursorOfRecipes().getCount(): " + viewModel.getCursorOfRecipes().getCount());
 
 
         viewModel.getIngredients(recipeID).observe(this, new Observer<List<IngredientEntry>>() {

@@ -25,9 +25,9 @@ public class DatabaseInitializer {
         task.execute();
     }
 
-    public static void populateSync(URL url, @NonNull final AppDatabase db) {
-        populateWithTestData(url, db);
-    }
+//    public static void populateSync(URL url, @NonNull final AppDatabase db) {
+//        populateWithData(url, db);
+//    }
 
     private static class PopulateDbAsync extends AsyncTask<Context, Void, Void> {
 
@@ -41,13 +41,13 @@ public class DatabaseInitializer {
 
         @Override
         protected Void doInBackground(final Context... params) {
-            populateWithTestData(mUrl, mDb);
+            populateWithData(mUrl, mDb);
             return null;
         }
 
     }
 
-    private static void populateWithTestData(URL url, AppDatabase appDatabase) {
+    private static void populateWithData(URL url, AppDatabase appDatabase) {
 
         RecipeDao recipeDao = appDatabase.getRecipeDao();
         StepDao stepDao = appDatabase.getStepDao();
@@ -92,45 +92,5 @@ public class DatabaseInitializer {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-//        db.loanModel().deleteAll();
-//        db.userModel().deleteAll();
-//        db.bookModel().deleteAll();
-//
-//        User user1 = addUser(db, "1", "Jason", "Seaver", 40);
-//        User user2 = addUser(db, "2", "Mike", "Seaver", 12);
-//        addUser(db, "3", "Carol", "Seaver", 15);
-//
-//        Book book1 = addBook(db, "1", "Dune");
-//        Book book2 = addBook(db, "2", "1984");
-//        Book book3 = addBook(db, "3", "The War of the Worlds");
-//        Book book4 = addBook(db, "4", "Brave New World");
-//        addBook(db, "5", "Foundation");
-//        try {
-//            // Loans are added with a delay, to have time for the UI to react to changes.
-//
-//            Date today = getTodayPlusDays(0);
-//            Date yesterday = getTodayPlusDays(-1);
-//            Date twoDaysAgo = getTodayPlusDays(-2);
-//            Date lastWeek = getTodayPlusDays(-7);
-//            Date twoWeeksAgo = getTodayPlusDays(-14);
-//
-//            addLoan(db, "1", user1, book1, twoWeeksAgo, lastWeek);
-//            Thread.sleep(DELAY_MILLIS);
-//            addLoan(db, "2", user2, book1, lastWeek, yesterday);
-//            Thread.sleep(DELAY_MILLIS);
-//            addLoan(db, "3", user2, book2, lastWeek, today);
-//            Thread.sleep(DELAY_MILLIS);
-//            addLoan(db, "4", user2, book3, lastWeek, twoDaysAgo);
-//            Thread.sleep(DELAY_MILLIS);
-//            addLoan(db, "5", user2, book4, lastWeek, today);
-//            Log.d("DB", "Added loans");
-//
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-
     }
-
 }
