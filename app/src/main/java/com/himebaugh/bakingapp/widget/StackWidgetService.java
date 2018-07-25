@@ -96,6 +96,9 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     }
 
     public void onDataSetChanged() {
+
+        // Called on start and when notifyAppWidgetViewDataChanged is called
+
         // This is triggered when you call AppWidgetManager notifyAppWidgetViewDataChanged
         // on the collection view corresponding to this factory. You can do heaving lifting in
         // here, synchronously. For example, if you need to process an image, fetch something

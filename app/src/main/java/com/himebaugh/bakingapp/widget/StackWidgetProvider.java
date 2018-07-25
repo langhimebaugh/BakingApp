@@ -30,6 +30,7 @@ public class StackWidgetProvider extends AppWidgetProvider {
 
             int recipeID = intent.getIntExtra(RECIPE_ID, 0);
 
+            // Create an Intent to launch RecipeStepListActivity
             Intent detailIntent = new Intent(context, RecipeStepListActivity.class);
             detailIntent.putExtra(RecipeStepListActivity.EXTRA_RECIPE_ID, recipeID);
             detailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -42,6 +43,7 @@ public class StackWidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 
+        // Perform this loop procedure for each App Widget that belongs to this provider
         // update each of the widgets with the remote adapter
         for (int i = 0; i < appWidgetIds.length; ++i) {
 
@@ -53,6 +55,7 @@ public class StackWidgetProvider extends AppWidgetProvider {
             remoteViews.setRemoteAdapter(appWidgetIds[i], R.id.stack_view, intent);
             remoteViews.setEmptyView(R.id.stack_view, R.id.empty_view);
 
+            // Intent to provide data to the onReceive() above.
             Intent clickIntent = new Intent(context, StackWidgetProvider.class);
             clickIntent.setAction(StackWidgetProvider.CLICK_ACTION);
             clickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetIds[i]);
@@ -62,6 +65,12 @@ public class StackWidgetProvider extends AppWidgetProvider {
             remoteViews.setPendingIntentTemplate(R.id.stack_view, clickPendingIntent);
 
             appWidgetManager.updateAppWidget(appWidgetIds[i], remoteViews);
+
+//            Intent wateringIntent = new Intent(context, PlantWateringService.class);
+//            wateringIntent.setAction(PlantWateringService.ACTION_WATER_PLANT);
+//            wateringIntent.putExtra(PlantWateringService.EXTRA_PLANT_ID, plantId);
+//            PendingIntent wateringPendingIntent = PendingIntent.getService(context, 0, wateringIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+//            views.setOnClickPendingIntent(R.id.widget_water_button, wateringPendingIntent);
         }
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
