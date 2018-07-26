@@ -1,7 +1,5 @@
 package com.himebaugh.bakingapp.model;
 
-import java.util.ArrayList;
-
 public class Steps {
 
     private int id;

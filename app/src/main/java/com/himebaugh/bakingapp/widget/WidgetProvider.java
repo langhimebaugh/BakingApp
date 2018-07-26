@@ -27,9 +27,9 @@ public class WidgetProvider extends AppWidgetProvider {
 
         // Widgets allow click handlers to only launch pending intents
         // views.setOnClickPendingIntent(R.id.widget_plant_image, pendingIntent);
-        remoteViews.setOnClickPendingIntent(R.id.appwidget_text, pendingIntent);
+        remoteViews.setOnClickPendingIntent(R.id.recipe_name, pendingIntent);
 
-        remoteViews.setTextViewText(R.id.appwidget_text, widgetText);
+        remoteViews.setTextViewText(R.id.recipe_name, widgetText);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, remoteViews);

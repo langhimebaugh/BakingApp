@@ -78,7 +78,7 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
     //private boolean mPlayWhenReady = true;
     // =========================================================================
 
-    TextView recipeStepDetailTextView;
+    // TextView recipeStepDetailTextView;
 
     private SimpleExoPlayer mExoPlayer;
     // private SimpleExoPlayerView mPlayerView;
@@ -139,7 +139,7 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
 //        if (mItem != null) {
 //            ((TextView) rootView.findViewById(R.id.recipe_step_detail)).setText(mItem.details);
 //        }
-        recipeStepDetailTextView = rootView.findViewById(R.id.tv_recipe_step_detail);
+        //recipeStepDetailTextView = rootView.findViewById(R.id.tv_recipe_step_detail);
 
         // Initialize the player view.
         mPlayerView = rootView.findViewById(R.id.player_view);
@@ -200,7 +200,7 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
             @Override
             public void onChanged(@Nullable StepEntry stepEntry) {
 
-                recipeStepDetailTextView.setText(stepEntry.getDescription());
+                mDetailTextView.setText(stepEntry.getDescription());
 
                 mVideoUri = Uri.parse(stepEntry.getVideoURL()).buildUpon().build();
                 mThumbnailUrl = stepEntry.getThumbnailURL();

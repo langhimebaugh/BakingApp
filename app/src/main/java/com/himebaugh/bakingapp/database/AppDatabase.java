@@ -4,21 +4,13 @@ import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
-import android.arch.persistence.room.TypeConverters;
-import android.content.ContentValues;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.himebaugh.bakingapp.model.Ingredients;
-import com.himebaugh.bakingapp.model.Recipe;
-import com.himebaugh.bakingapp.model.Steps;
 import com.himebaugh.bakingapp.utils.NetworkUtil;
 
-import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 
 @Database(entities = {RecipeEntry.class, IngredientEntry.class, StepEntry.class}, version = 1, exportSchema = false)
 //@TypeConverters(DateConverter.class)

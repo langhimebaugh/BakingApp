@@ -14,7 +14,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:ellipsize="none"
-        android:gravity="right|end"
+        android:gravity="end"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -50,7 +50,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@mipmap/ic_play_arrow_black_24dp"
-        tools:text=">>"/>
+        tools:text=">>"
+        android:contentDescription="@string/play_arrow_image"/>
 
 
 </android.support.constraint.ConstraintLayout>

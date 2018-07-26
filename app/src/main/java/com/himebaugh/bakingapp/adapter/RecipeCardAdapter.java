@@ -1,7 +1,6 @@
 package com.himebaugh.bakingapp.adapter;
 
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 
 import com.himebaugh.bakingapp.R;
 import com.himebaugh.bakingapp.database.RecipeEntry;
-import com.himebaugh.bakingapp.model.Recipe;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

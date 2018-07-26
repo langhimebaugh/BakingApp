@@ -7,13 +7,13 @@ for how to complete it.
 This will involve
 • Use MediaPlayer/Exoplayer to display videos.
 • handle media loading
-• TODO: verify your user interfaces with UI tests
+• verify your user interfaces with UI tests
 • TODO: Handle error cases in Android.
 • Add a widget to your app experience.
 • Leverage a third-party library in your app.
 • Use Fragments to create a responsive design that works on phones and tablets.
 • adding accessibility features
-• TODO: allowing for localization
+• allowing for localization
 
 Project Rubric
 • Display recipes - App should display recipes from provided network resource.
@@ -24,7 +24,7 @@ Project Rubric
 • Proper utilization of video assets - Application properly initializes and releases video assets when appropriate.
 • Proper network asset utilization - Application should properly retrieve media assets from the provided network links. It should properly
         handle network requests.
-• TODO: UI Testing - Application makes use of Espresso to test aspects of the UI.
+• UI Testing - Application makes use of Espresso to test aspects of the UI.
 • Third-party libraries - Application sensibly utilizes a third-party library to enhance the app's features. That could be helper library to
         interface with ContentProviders if you choose to store the recipes, a UI binding library to avoid writing findViewById a bunch of times, or
         something similar.
@@ -37,7 +37,7 @@ Project Rubric
 
 Core App Quality Guidelines - http://udacity.github.io/android-nanodegree-guidelines/core.html
 
-TODO: Move all the hardcoded Strings in your project to the strings.xml file.
+Move all the hardcoded Strings in your project to the strings.xml file.
 
 Review Sample Mocks
 

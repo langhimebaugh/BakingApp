@@ -98,7 +98,7 @@ public class WidgetIntentService extends IntentService {
 
 
 
-    //     --------- beginning of crash
+    //     --------- beginning of crash ????????????????????
     //07-22 22:03:04.525 8705-8705/com.himebaugh.bakingapp E/AndroidRuntime: FATAL EXCEPTION: main
     //    Process: com.himebaugh.bakingapp, PID: 8705
     //    java.lang.RuntimeException: Unable to start receiver com.himebaugh.bakingapp.widget.WidgetProvider: java.lang.IllegalStateException: Not allowed to start service Intent { act=com.himebaugh.bakingapp.action.UPDATE_RECIPE_WIDGET cmp=com.himebaugh.bakingapp/.widget.WidgetIntentService }: app is in background uid UidRecord{b96a783 u0a78 RCVR idle procs:1 seq(0,0,0)}

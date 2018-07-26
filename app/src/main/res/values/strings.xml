@@ -2,25 +2,30 @@
     <string name="app_name">Baking App</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_title">Half Baked</string>
+    <string name="nav_header_subtitle">By Langdon Himebaugh</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="appwidget_text">EXAMPLE</string>
-    <string name="add_widget">Add widget</string>
     <string name="empty_view_text">Empty</string>
     <string name="title_recipe_step_list">Recipe Steps</string>
     <string name="title_recipe_step_detail">Recipe Step Detail</string>
 
     <string name="label_ingredients">Ingredients:</string>
     <string name="label_steps">Steps:</string>
-    <string name="title_activity_basic">BasicActivity</string>
-    <string name="title_activity_tab">TabActivity</string>
-    <string name="section_format">Hello World from section: %1$d</string>
+
+    <string name="recipe_card_image">Recipe Image</string>
+    <string name="recipe_step_thumbnail">Recipe Thumbnail Image</string>
+    <string name="play_arrow_image">Play Arrow Image</string>
 
     <string name="step">Step %d</string>
+
+    <string name="about_heading1">Half Baked</string>
+    <string name="about_heading2">An App for Udacity\'s \nAndroid Developer Nanodegree</string>
+    <string name="about_heading3">Version 1.0</string>
+    <string name="about_paragraph1">By Langdon Himebaugh</string>
+
+    <string name="nav_about">About</string>
 
 </resources>

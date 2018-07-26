@@ -2,7 +2,6 @@ package com.himebaugh.bakingapp.widget;
 
 import com.himebaugh.bakingapp.model.Ingredients;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class StackWidgetItem {

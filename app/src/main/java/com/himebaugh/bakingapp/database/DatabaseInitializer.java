@@ -2,7 +2,6 @@ package com.himebaugh.bakingapp.database;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 
 import com.himebaugh.bakingapp.model.Ingredients;
 import com.himebaugh.bakingapp.model.Recipe;

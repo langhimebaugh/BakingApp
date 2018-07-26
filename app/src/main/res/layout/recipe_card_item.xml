@@ -18,7 +18,7 @@
             android:layout_height="@dimen/recipe_card_image_height"
             android:adjustViewBounds="true"
             android:alpha="0.7"
-            android:contentDescription="description"
+            android:contentDescription="@string/recipe_card_image"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
