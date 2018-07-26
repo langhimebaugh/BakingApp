@@ -258,6 +258,7 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
     @Override
     public void onStart() {
         super.onStart();
+        Log.i(TAG, "onStart: ");
         if (Util.SDK_INT > 23) {
             //
             if (mVideoUri != null) {
@@ -269,6 +270,7 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
     @Override
     public void onResume() {
         super.onResume();
+        Log.i(TAG, "onResume: ");
         if (Util.SDK_INT <= 23 || mExoPlayer == null) {
             //
             if (mVideoUri != null) {
@@ -280,23 +282,53 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
     @Override
     public void onPause() {
         super.onPause();
-        if (Util.SDK_INT <= 23) {
-            if (mExoPlayer != null) {
-                mCurrentPosition = mExoPlayer.getCurrentPosition();
-                releasePlayer();
-            }
-        }
+        Log.i(TAG, "onPause: ");
+
+//        if (mExoPlayer != null) {
+//            mCurrentPosition = mExoPlayer.getCurrentPosition();
+//            mPlayWhenReady = mExoPlayer.getPlayWhenReady();
+//            releasePlayer();
+//        }
+
+//        if (mExoPlayer != null) {
+//            mCurrentPosition = mExoPlayer.getCurrentPosition();
+//            // mPlayWhenReady = mExoPlayer.getPlayWhenReady();
+//            releasePlayer();
+//        }
+//        if (Util.SDK_INT <= 23) {
+//            if (mExoPlayer != null) {
+//                mCurrentPosition = mExoPlayer.getCurrentPosition();
+//                mPlayWhenReady = mExoPlayer.getPlayWhenReady();
+//                releasePlayer();
+//            }
+//        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (Util.SDK_INT > 23) {
-            if (mExoPlayer != null) {
-                mCurrentPosition = mExoPlayer.getCurrentPosition();
-                releasePlayer();
-            }
+
+        Log.i(TAG, "onStop: ");
+
+        //===============================================================================================
+        // This works for API 23 & 26 On Rotation, On Home (circle) button, On Recents (square) button
+        
+        // To save persistent data, such as user preferences or data for a database, you should take appropriate 
+        // opportunities when your activity is in the foreground. 
+        // If no such opportunity arises, you should save such data during the onStop() method.
+        //===============================================================================================
+        if (mExoPlayer != null) {
+            mCurrentPosition = mExoPlayer.getCurrentPosition();
+            mPlayWhenReady = mExoPlayer.getPlayWhenReady();
+            releasePlayer();
         }
+//        if (Util.SDK_INT > 23) {
+//            if (mExoPlayer != null) {
+//                mCurrentPosition = mExoPlayer.getCurrentPosition();
+//                mPlayWhenReady = mExoPlayer.getPlayWhenReady();
+//                releasePlayer();
+//            }
+//        }
     }
 
     /**
@@ -305,6 +337,7 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.i(TAG, "onDestroy: ");
 //        if (mExoPlayer != null) {
 //            releasePlayer();
 //        }

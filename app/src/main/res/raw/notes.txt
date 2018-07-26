@@ -8,7 +8,7 @@ This will involve
 • Use MediaPlayer/Exoplayer to display videos.
 • handle media loading
 • verify your user interfaces with UI tests
-• TODO: Handle error cases in Android.
+• Handle error cases in Android.
 • Add a widget to your app experience.
 • Leverage a third-party library in your app.
 • Use Fragments to create a responsive design that works on phones and tablets.
@@ -42,3 +42,12 @@ Move all the hardcoded Strings in your project to the strings.xml file.
 Review Sample Mocks
 
 Make sure your app functions properly on tablet devices as well as phones.
+
+=========================
+Code Review 1:
+Here are a few things you should work on:
+
+App's minimum sdk version is 15.
+On a Nexus 7 (API 23), playback state values cannot be restored if the device is rotated or if the app is relaunched from Home, All Apps or Recents Screen (if the operating system had killed our app to free up resources).
+playWhenReadyvalue cannot be restored if the app is relaunched from Home, All Apps or Recents Screen (if the operating system had NOT killed our app to free up resources).
+Please refer to code review section for more details.

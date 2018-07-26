@@ -4,7 +4,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.himebaugh.bakingapp"
-        minSdkVersion 15
+        minSdkVersion 16 // minimum sdk version 16 required for Exoplayer
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
