@@ -59,20 +59,6 @@
             android:exported="false"
             android:syncable="true"/>
 
-        <!-- App Widget w/ Service -->
-        <receiver android:name=".widget.WidgetProvider">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_info"/>
-        </receiver>
-        <service
-            android:name=".widget.WidgetIntentService"
-            android:exported="false"/>
-
         <!-- App Stack Widget w/ Service -->
         <receiver android:name=".widget.StackWidgetProvider">
             <intent-filter>

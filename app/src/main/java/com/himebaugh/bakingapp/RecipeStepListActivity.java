@@ -25,12 +25,12 @@ import com.himebaugh.bakingapp.database.StepEntry;
 import java.util.List;
 
 /**
- * An activity representing a list of Items. This activity
- * has different presentations for handset and tablet-size devices. On
- * handsets, the activity presents a list of items, which when touched,
- * lead to a ItemDetailActivity representing
- * item details. On tablets, the activity presents the list of items and
- * item details side-by-side using two vertical panes.
+ * An activity representing a list of Items.
+ * This activity has different presentations for handset and tablet-size devices.
+ * On handsets, the activity presents a list of items, which when touched,
+ * lead to a ItemDetailActivity representing item details.
+ * On tablets, the activity presents the list of items and item details side-by-side
+ * using two vertical panes.
  */
 public class RecipeStepListActivity extends AppCompatActivity implements StepsAdapter.StepAdapterOnClickHandler {
 
@@ -48,8 +48,7 @@ public class RecipeStepListActivity extends AppCompatActivity implements StepsAd
     private int mRecipeId = DEFAULT_RECIPE_ID;
 
     /**
-     * Whether or not the activity is in two-pane mode, i.e. running on a tablet
-     * device.
+     * Whether or not the activity is in two-pane mode, i.e. running on a tablet device.
      */
     private boolean mTwoPane;
     private IngredientsAdapter mIngredientsAdapter;
@@ -70,9 +69,11 @@ public class RecipeStepListActivity extends AppCompatActivity implements StepsAd
             mActionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//        toolbar.setTitle(getTitle());
+
+        // When returning from RecipeStepDetailActivity via the back button
+        // no arguments are passed.  How do I know what the RecipeID was?
+        // Anyway to pass back the ID with the back button???
+        // See below...
 
         if (savedInstanceState != null) {
             mRecipeId = savedInstanceState.getInt("recipeId");
@@ -95,15 +96,11 @@ public class RecipeStepListActivity extends AppCompatActivity implements StepsAd
         }
 
 
-        // When returning from RecipeStepDetailActivity via the back button
-        // no arguments are passed.  How do I know what the RecipeID was?
-        // Anyway to pass back the ID with the back button???
-
         Log.i(TAG, "onCreate: mRecipeId=" + mRecipeId);
 
         if (findViewById(R.id.recipe_step_detail_container) != null) {
             // The detail container view will be present only in the
-            // large-screen layouts (res/values-w900dp).
+            // large-screen layouts (res/values-sw600dp).
             // If this view is present, then the
             // activity should be in two-pane mode.
             mTwoPane = true;

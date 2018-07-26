@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
@@ -17,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -35,7 +33,6 @@ import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
-
 import com.himebaugh.bakingapp.database.DataViewModel;
 import com.himebaugh.bakingapp.database.RecipeEntry;
 import com.himebaugh.bakingapp.database.StepEntry;
@@ -53,35 +50,17 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
 
     private final static String TAG = RecipeStepDetailFragment.class.getName();
 
-    /**
-     * The fragment argument representing the item ID that this fragment
-     * represents.
-     */
-    // public static final String EXTRA_RECIPE_ID = "extra_recipe_id";
-    // public static final String EXTRA_STEP_NUMBER = "extra_step_number";
-
     private static final int DEFAULT_RECIPE_ID = -1;
     private int mRecipeId = DEFAULT_RECIPE_ID;
 
-    // private CollapsingToolbarLayout appBarLayout;
-    private AppBarLayout appBarLayout;
     private Toolbar toolbar;
-
-
-    // =========================================================================
-    public static final String STEP_KEY = "step_k";
 
     private static final String PLAYER_POSITION = "player_current_position";
     private static final String PLAYER_PLAY_WHEN_READY = "player_play_when_ready";
 
     private long mCurrentPosition = 0;
-    //private boolean mPlayWhenReady = true;
-    // =========================================================================
-
-    // TextView recipeStepDetailTextView;
 
     private SimpleExoPlayer mExoPlayer;
-    // private SimpleExoPlayerView mPlayerView;
     private PlayerView mPlayerView;
     private ImageView mThumbnailView;
     private Uri mVideoUri;
@@ -93,10 +72,6 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
 
     private boolean mLandscapeMobileLayout;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public RecipeStepDetailFragment() {
     }
 
@@ -105,8 +80,7 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
         super.onCreate(savedInstanceState);
 
         Activity activity = this.getActivity();
-        // appBarLayout = activity.findViewById(R.id.toolbar_layout);
-        // appBarLayout = activity.findViewById(R.id.app_bar);
+
         toolbar = activity.findViewById(R.id.detail_toolbar);
 
         if (getArguments().containsKey(RecipeStepListActivity.EXTRA_RECIPE_ID)) {
@@ -135,12 +109,6 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
 
         View rootView = inflater.inflate(R.layout.recipe_step_detail, container, false);
 
-        // Show the dummy content as text in a TextView.
-//        if (mItem != null) {
-//            ((TextView) rootView.findViewById(R.id.recipe_step_detail)).setText(mItem.details);
-//        }
-        //recipeStepDetailTextView = rootView.findViewById(R.id.tv_recipe_step_detail);
-
         // Initialize the player view.
         mPlayerView = rootView.findViewById(R.id.player_view);
 
@@ -154,10 +122,6 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
             mLandscapeMobileLayout = false;
         }
 
-        // Load the question mark as the background image until the user answers the question.
-        // mPlayerView.setDefaultArtwork(BitmapFactory.decodeResource(getResources(), R.drawable.question_mark));
-
-
         if (savedInstanceState != null) {
 
             if (savedInstanceState.containsKey(PLAYER_POSITION)) {
@@ -168,7 +132,6 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
             }
 
         }
-
 
         return rootView;
     }
@@ -183,15 +146,9 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
 
                 Log.i(TAG, "LANG: >>>>>" + recipeEntry.getName());
 
-                // set page title
-//                if (appBarLayout != null) {
-//                    appBarLayout.setTitle(recipeEntry.getName());
-//                }
                 if (toolbar != null) {
                     toolbar.setTitle(recipeEntry.getName());
                 }
-
-                //temp.setText(recipeEntry.getName());
 
             }
         });
@@ -204,14 +161,6 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
 
                 mVideoUri = Uri.parse(stepEntry.getVideoURL()).buildUpon().build();
                 mThumbnailUrl = stepEntry.getThumbnailURL();
-
-                //===================================
-                // if video not available...
-                // set...
-                // player_view = invisible
-                // iv_recipe_step_thumbnail = visible
-                // tv_recipe_step_detail = visible
-                //===================================
 
                 // if internet available...
                 if (NetworkUtil.isNetworkAvailable((getContext()))) {
@@ -397,31 +346,6 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
 
         }
 
-//        if (playbackState == Player.STATE_ENDED) {
-//            // showControls();
-//            debugRootView.setVisibility(View.VISIBLE);
-//        }
-//        updateButtonVisibilities();
-//
-//
-//        if ((playbackState == Player.STATE_READY) && playWhenReady) {
-//            stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,
-//                    playerCurrentPosition, 1f);
-//            videoThumbnailIv.setVisibility(View.INVISIBLE); //hide thumbnail to play
-//        } else if ((playbackState == Player.STATE_READY)) {
-//            stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED,
-//                    playerCurrentPosition, 1f);
-//            videoThumbnailIv.setVisibility(View.VISIBLE); // show thumbnail when paused
-//        }
-//        videoSession.setPlaybackState(stateBuilder.build());
-//
-//
-//        if ((playbackState == Player.STATE_READY) && playWhenReady) {
-//            stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, mExoPlayer.getCurrentPosition(), 1f);
-//        } else if ((playbackState == Player.STATE_READY)) {
-//            stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED, mExoPlayer.getCurrentPosition(), 1f);
-//        }
-//        mediaSession.setPlaybackState(stateBuilder.build());
     }
 
     @Override
@@ -461,8 +385,6 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
             outState.putLong(PLAYER_POSITION, mExoPlayer.getCurrentPosition());
             outState.putBoolean(PLAYER_PLAY_WHEN_READY, mExoPlayer.getPlayWhenReady());
         }
-        // outState.putLong(PLAYER_POSITION, mExoPlayer.getCurrentPosition());
-        // outState.putBoolean(PLAYER_PLAY_WHEN_READY, mExoPlayer.getPlayWhenReady());
 
         super.onSaveInstanceState(outState);
     }

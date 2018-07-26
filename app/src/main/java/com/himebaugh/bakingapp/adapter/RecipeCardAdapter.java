@@ -52,11 +52,6 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Li
         RecipeEntry recipe = mRecipeList.get(position);
         holder.recipeName.setText(recipe.getName());
 
-        // =================================================
-        // An ERROR WILL OCCUR because JSON image is blank...
-        // On ERROR Load R.drawable.recipe_image_placeholder
-        // =================================================
-
         String imageURL = recipe.getImage();
 
         Log.i(TAG, "imageURL:=" + imageURL + "<==");

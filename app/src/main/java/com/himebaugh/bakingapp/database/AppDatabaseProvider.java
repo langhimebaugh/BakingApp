@@ -15,10 +15,6 @@ import android.support.annotation.Nullable;
 
 public class AppDatabaseProvider extends ContentProvider {
 
-    // NOTE TO SELF:
-    // USE ContentResolver  NOT ContentProvider
-    // Don't close the database ... db.close();
-
     private static final String TAG = AppDatabaseProvider.class.getSimpleName();
 
     public static final int RECIPES = 100;
@@ -64,7 +60,6 @@ public class AppDatabaseProvider extends ContentProvider {
     public boolean onCreate() {
 
         // Creates a new database object.
-        //appDatabase = Room.databaseBuilder(getContext(), AppDatabase.class, AppDatabase.DATABASE_NAME).build();
         mAppDatabase = AppDatabase.getInstance(getContext());
 
         // Gets a Data Access Object to perform the database operations
@@ -77,10 +72,6 @@ public class AppDatabaseProvider extends ContentProvider {
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
 
-        // Get access to underlying database (read-only for query)
-        // final SQLiteDatabase db = mMovieDbHelper.getReadableDatabase();
-
-        // Write URI match code and set a variable to return a Cursor
         int match = sUriMatcher.match(uri);
         Cursor returnCursor = null;
         String id;
@@ -89,7 +80,7 @@ public class AppDatabaseProvider extends ContentProvider {
 
             // Query for the recipes directory
             case RECIPES:
-                // returnCursor = mRecipeDao.selectAll(AppDatabaseContract.RecipeEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+
                 returnCursor = mRecipeDao.selectAll();
                 break;
 
@@ -104,93 +95,6 @@ public class AppDatabaseProvider extends ContentProvider {
 
                 break;
         }
-//        Cursor result = null;
-//
-//        int match = uriMatcher.match(uri);
-//        switch (match) {
-//            case LISTS:
-//
-//                result = mAppDatabase.getRecipeDao().selectAllWithChildElements()
-//
-//
-//                db.query(
-//                        RecipeContract.RecipeEntry.TABLE_RECIPES_NAME,
-//                        projection,
-//                        selection,
-//                        selectionArgs,
-//                        null,
-//                        null,
-//                        sortOrder
-//                );
-//
-//                result.setNotificationUri(getContext().getContentResolver(), uri);
-//                break;
-//
-//            case LIST_WITH_ID:
-//                String id = uri.getPathSegments().get(1);
-//                String mSelection = RecipeContract.RecipeEntry._ID + "=?";
-//                String[] mSelectionArgs = new String[]{id};
-//
-//                result = db.query(
-//                        RecipeContract.RecipeEntry.TABLE_RECIPES_NAME,
-//                        projection,
-//                        mSelection,
-//                        mSelectionArgs,
-//                        null,
-//                        null,
-//                        sortOrder
-//                );
-//
-//                break;
-//            default:
-//                Log.w(TAG, "Unknown URI: " + uri);
-//        }
-//
-//        final int code = URI_MATCHER.match(uri);
-//
-//        switch( code ) {
-//            case HOMEWORK:
-//            case HOMEWORK_ID:
-//                final Context context = getContext();
-//                if (context == null) {
-//                    return null;
-//                }
-//
-//                HomeworkDao homeworkDao = AppDatabase.getInstance(context).homeworkDao();
-//                final Cursor cursor;
-//
-//                if (code == HOMEWORK) {
-//                    cursor = homeworkDao.selectAll();
-//                } else {
-//                    cursor = homeworkDao.selectByUid(ContentUris.parseId(uri));
-//                }
-//                cursor.setNotificationUri(context.getContentResolver(), uri);
-//                return cursor;
-//
-//            default:
-//                throw new IllegalArgumentException("Unknown URI: " + uri);
-//
-//        }
-//
-//        final int code = MATCHER.match(uri);
-//
-//        context = HomepageFragment.context;
-//        if (code == CODE_DIR || code == CODE_ITEM) {
-//            if (context == null) {
-//                return null;
-//            }
-//            ExpenseDao expenseDao = AppDatabase.getInstance(context).expenseDao();
-//            final Cursor cursor;
-//            if (code == CODE_DIR) {
-//                cursor = expenseDao.selectAll();
-//            } else {
-//                cursor = expenseDao.selectById(ContentUris.parseId(uri));
-//            }
-//            cursor.setNotificationUri(context.getContentResolver(), uri);
-//            return cursor;
-//        } else {
-//            throw new IllegalArgumentException("Unknown URI: " + uri);
-//        }
 
         return returnCursor;
     }
@@ -206,11 +110,6 @@ public class AppDatabaseProvider extends ContentProvider {
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
         return null;
     }
-
-//    // Implements the provider's insert method
-//    public Cursor insert(Uri uri, ContentValues values) {
-//        // Insert code here to determine which DAO to use when inserting data, handle error conditions, etc.
-//    }
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {

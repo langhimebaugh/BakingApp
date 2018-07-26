@@ -13,7 +13,6 @@ import com.himebaugh.bakingapp.utils.NetworkUtil;
 import java.net.URL;
 
 @Database(entities = {RecipeEntry.class, IngredientEntry.class, StepEntry.class}, version = 1, exportSchema = false)
-//@TypeConverters(DateConverter.class)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static final String LOG_TAG = AppDatabase.class.getSimpleName();
@@ -27,39 +26,15 @@ public abstract class AppDatabase extends RoomDatabase {
                 Log.d(LOG_TAG, "Creating new database instance");
                 sInstance = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, AppDatabase.DATABASE_NAME)
 
-                        // TODO: Temporary
-                        // .allowMainThreadQueries()
                         // To Populate database
                         .addCallback(new Callback() {
                             @Override
                             public void onCreate(@NonNull SupportSQLiteDatabase db) {
                                 super.onCreate(db);
 
-                                // sInstance.recipeDao().insertRecipe();
-                                // sInstance.preFillData(context);
-
-                                // ContentValues cv = new ContentValues();
-                                // cv.put("name", "saladillo");
-                                // db.insert("business", 0, cv);
-
-                                // https://github.com/lct8712/RoomWordSample/tree/756ec8dd8549b327256ad36283ccb5378485c23b
-                                // new InitAsyncTask(sInstance).execute();
-                                // Log.d(LOG_TAG, "db init");
-
-
-                                // http://go.udacity.com/android-baking-app-json
-                                // https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json
-                                // https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json
-
-
                                 URL url = NetworkUtil.buildUrl(context.getApplicationContext(), "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json");
 
-                                //URL url = NetworkUtil.buildUrl(context.getApplicationContext(), "https://7gdjdtbej1.execute-api.us-west-2.amazonaws.com/prod/recipes?total_recipe=6&nullable_resource=true");
-
-
-                                // ================================
                                 // ALL 3 Options below will work!
-                                // ================================
 
                                 // #1
                                 DatabaseInitializer.populateAsync(url, sInstance);
@@ -69,7 +44,6 @@ public abstract class AppDatabase extends RoomDatabase {
 
                                 // #3
                                 // new InitDatabaseTask(sInstance).execute(context.getApplicationContext());
-                                // Log.d(LOG_TAG, "db init");
                             }
                         })
 
@@ -81,78 +55,9 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     public abstract RecipeDao getRecipeDao();
+
     public abstract IngredientDao getIngredientDao();
+
     public abstract StepDao getStepDao();
-
-
-//
-//    private static class InitDatabaseTask extends AsyncTask<Context, Void, ArrayList<Recipe>> {
-//
-//        private final RecipeDao recipeDao;
-//        private final StepDao stepDao;
-//        private final IngredientDao ingredientDao;
-//
-//        private InitDatabaseTask(AppDatabase appDatabase) {
-//            recipeDao = appDatabase.recipeDao();
-//            stepDao = appDatabase.stepDao();
-//            ingredientDao = appDatabase.ingredientDao();
-//        }
-//
-//
-//        @Override
-//        protected ArrayList<Recipe> doInBackground(Context... contexts) {
-//
-//            URL url = NetworkUtil.buildUrl(contexts[0], "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json");
-//
-//            ArrayList<Recipe> recipeList = null;
-//
-//            try {
-//                recipeList = NetworkUtil.getRecipeList(url);
-//
-//                for (Recipe recipe : recipeList) {
-//
-//                    recipeDao.insertRecipe(new RecipeEntry(recipe.getName(), recipe.getServings(), recipe.getImage()));
-//
-//                    for (Ingredients ingredients : recipe.getIngredients()) {
-//
-//                        ingredientDao.insertIngredient(new IngredientEntry(
-//                                ingredients.getQuantity(),
-//                                ingredients.getMeasure(),
-//                                ingredients.getIngredient(),
-//                                recipe.getId()));
-//
-//                    }
-//
-//                    for (Steps steps : recipe.getSteps()) {
-//
-//                        stepDao.insertStep(new StepEntry(
-//                                steps.getId(),
-//                                steps.getShortDescription(),
-//                                steps.getDescription(),
-//                                steps.getVideoURL(),
-//                                steps.getThumbnailURL(),
-//                                recipe.getId()));
-//
-//                    }
-//
-//                }
-//
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//            return recipeList;
-//        }
-//
-//    @Override
-//        protected void onPostExecute(ArrayList<Recipe> recipeList) {
-//
-//            //
-//
-//        }
-//
-//
-//    }
 
 }

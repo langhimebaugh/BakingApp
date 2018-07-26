@@ -24,10 +24,6 @@ public class DatabaseInitializer {
         task.execute();
     }
 
-//    public static void populateSync(URL url, @NonNull final AppDatabase db) {
-//        populateWithData(url, db);
-//    }
-
     private static class PopulateDbAsync extends AsyncTask<Context, Void, Void> {
 
         private final URL mUrl;
@@ -51,8 +47,6 @@ public class DatabaseInitializer {
         RecipeDao recipeDao = appDatabase.getRecipeDao();
         StepDao stepDao = appDatabase.getStepDao();
         IngredientDao ingredientDao = appDatabase.getIngredientDao();
-
-        //URL url = NetworkUtil.buildUrl(context, "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json");
 
         ArrayList<Recipe> recipeList = null;
 

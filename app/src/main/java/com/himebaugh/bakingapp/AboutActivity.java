@@ -5,8 +5,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-import com.himebaugh.bakingapp.R;
-
 public class AboutActivity extends AppCompatActivity {
 
     private TextView logoTextView;

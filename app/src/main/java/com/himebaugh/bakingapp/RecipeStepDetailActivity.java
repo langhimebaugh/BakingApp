@@ -46,9 +46,6 @@ public class RecipeStepDetailActivity extends AppCompatActivity implements ViewP
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_step_detail);
 
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
-        //setSupportActionBar(toolbar);
-
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -71,31 +68,6 @@ public class RecipeStepDetailActivity extends AppCompatActivity implements ViewP
         mViewPager.addOnPageChangeListener(this);
 
         loadPagerAdapterFromViewModel(mRecipeId,mStepNumber);
-
-
-        // savedInstanceState is non-null when there is fragment state
-        // saved from previous configurations of this activity
-        // (e.g. when rotating the screen from portrait to landscape).
-        // In this case, the fragment will automatically be re-added
-        // to its container so we don't need to manually add it.
-        // For more information, see the Fragments API guide at:
-        //
-        // http://developer.android.com/guide/components/fragments.html
-        //
-
-       // July 15
-//        if (savedInstanceState == null) {
-//            // Create the detail fragment and add it to the activity
-//            // using a fragment transaction.
-//            Bundle arguments = new Bundle();
-//            arguments.putInt(RecipeStepListActivity.EXTRA_RECIPE_ID, mRecipeId );
-//            arguments.putInt(RecipeStepListActivity.EXTRA_STEP_NUMBER, mStepNumber );
-//            RecipeStepDetailFragment fragment = new RecipeStepDetailFragment();
-//            fragment.setArguments(arguments);
-//            getSupportFragmentManager().beginTransaction()
-//                    .add(R.id.recipe_step_detail_container, fragment)
-//                    .commit();
-//        }
     }
 
     private void loadPagerAdapterFromViewModel(int recipeID, final int stepNumber) {
@@ -111,7 +83,6 @@ public class RecipeStepDetailActivity extends AppCompatActivity implements ViewP
                 // stepNumber gets passed through the StepsPagerAdapter to RecipeStepDetailFragment where it will
                 // start playing the video only if stepNumber matches the current page.
                 mStepsPagerAdapter = new StepsPagerAdapter(getBaseContext(),stepEntries,getSupportFragmentManager(), stepNumber);
-
 
                 mViewPager.setAdapter(mStepsPagerAdapter);
 

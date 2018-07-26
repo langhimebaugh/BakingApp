@@ -31,33 +31,5 @@ public interface StepDao {
     @Query("SELECT * FROM " + AppDatabaseContract.StepEntry.TABLE_NAME + " WHERE " + AppDatabaseContract.StepEntry.COLUMN_RECIPE_ID + " = :recipeId AND " + AppDatabaseContract.StepEntry.COLUMN_STEP_NUMBER + " = :stepNumber ")
     LiveData<StepEntry> loadStepsByStepNumber(int recipeId, int stepNumber);
 
-
-    // ========================
-    // https://android.jlelse.eu/android-architecture-components-room-introduction-4774dd72a1ae
-    // ========================
-    // @Insert
-    // void insert(Repo... repos);
-
-    // @Insert
-    // void insert(Repo repo);
-
-    // @Insert
-    // void insert(List<Repo> repoList);
-
-    // @Query("SELECT * FROM repo")
-    // List<Repo> getAllRepos();
-
-    // @Query("SELECT * FROM repo WHERE id=:id")
-    // Repo getRepo(int id);
-
-    // @Query("SELECT * FROM repo")
-    // Cursor getRepoCursor();
-
-    // @Query("SELECT * FROM repo WHERE name=:name")
-    // List<Repo> getReposByName(String name);
-
-    // @Query("SELECT * FROM repo WHERE name=:name LIMIT :max")
-    // List<Repo> getReposByName(int max, String... name);
-
 }
 

@@ -6,12 +6,10 @@ import android.arch.lifecycle.LiveData;
 import android.database.Cursor;
 import android.util.Log;
 
-
 import java.util.List;
 
 public class DataViewModel extends AndroidViewModel {
 
-    // Constant for logging
     private static final String TAG = DataViewModel.class.getSimpleName();
 
     private AppDatabase mDatabase;
@@ -22,11 +20,6 @@ public class DataViewModel extends AndroidViewModel {
         super(application);
         mDatabase = AppDatabase.getInstance(this.getApplication());
         Log.d(TAG, "Actively retrieving the recipes from the DataBase");
-
-
-        // recipes = mDatabase.recipeDao().loadAllRecipes();
-        // Log.i(TAG, "MainViewModel: recipes.getValue().size()=" + recipes.getValue().size());
-        // Log.i(TAG, "MainViewModel: getRecipes().getValue().size()=" + getRecipes().getValue().size());
     }
 
     public LiveData<List<RecipeEntry>> getRecipes() {

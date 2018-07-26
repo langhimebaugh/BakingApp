@@ -13,7 +13,6 @@ public class RecipeEntry {
     private int servings;
     private String image;
 
-
     @Ignore
     public RecipeEntry(String name, int servings, String image) {
         this.name = name;
