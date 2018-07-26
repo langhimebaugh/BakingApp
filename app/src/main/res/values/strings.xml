@@ -2,7 +2,7 @@
     <string name="app_name">Baking App</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Half Baked</string>
+    <string name="nav_header_title">Baking App</string>
     <string name="nav_header_subtitle">By Langdon Himebaugh</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
@@ -21,7 +21,7 @@
 
     <string name="step">Step %d</string>
 
-    <string name="about_heading1">Half Baked</string>
+    <string name="about_heading1">Baking App</string>
     <string name="about_heading2">An App for Udacity\'s \nAndroid Developer Nanodegree</string>
     <string name="about_heading3">Version 1.0</string>
     <string name="about_paragraph1">By Langdon Himebaugh</string>
